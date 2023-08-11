@@ -1,0 +1,15 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Many: MTG Calculator</title>
+    <link rel="icon" href="{% static 'lands/assets/how-many-favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'lands/css/lands.css' %}">
+</head>
+<body>
+    {% include 'lands/partials/_header.html' %}
+    {% block content %}{% endblock %}
+</body>
+</html>

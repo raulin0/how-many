@@ -1,0 +1,201 @@
+/* Font-Face Declarations */
+@font-face {
+  font-family: 'lexend-regular';
+  src: url('/static/lands/assets/fonts/Lexend-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'lexend-bold';
+  src: url('/static/lands/assets/fonts/Lexend-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'lexend-black';
+  src: url('/static/lands/assets/fonts/Lexend-Black.ttf') format('truetype');
+}
+
+body {
+  font-family: 'lexend-regular', Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  text-align: center;
+  padding: 0;
+  font-size: 1rem;
+  margin: 0;
+}
+
+header {
+  background-color: #4CAF50;
+  text-align: justify;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 0.5rem;
+}
+
+header p {
+  color: #ffffff;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+header a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+header a:hover {
+  text-decoration: underline;
+}
+
+section.title {
+  color: #4CAF50;
+  margin-top: 7rem;
+}
+
+section.title p {
+  color: #000000;
+  text-align: center;
+}
+
+section.title a {
+  font-family: 'lexend-black', Arial, sans-serif;
+  color: #4CAF50;
+  text-decoration: none;
+}
+
+section.title a:hover {
+  text-decoration: underline;
+}
+
+section.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 50rem;
+  max-height: 40rem;
+  margin: 1rem auto;
+  padding: 1rem;
+}
+
+textarea {
+  font-family: 'lexend-regular', Arial, sans-serif;
+  background-color: #f2f2f2;
+  text-align: justify;
+  width: 100%;
+  height: 30rem;
+  padding: 1rem;
+  border:none;
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+  resize: none;
+}
+
+input[type="submit"] {
+  font-family: 'lexend-regular', Arial, sans-serif;
+  background-color: #4CAF50;
+  color: #ffffff;
+  margin-top: 2rem;
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+}
+
+input[type="submit"]:hover {
+  color: #000000;
+  background-color: #f2f2f2;
+}
+
+section.results-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 50%;
+  margin: auto;
+  margin-bottom: 2rem;
+}
+
+div.analysis {
+  text-align: justify;
+}
+
+div.errors {
+  text-align: center;
+}
+
+div.errors p {
+  color: #b10000;
+}
+
+div.explanation {
+  text-align: justify;
+}
+
+div.explanation a {
+  color: #4CAF50;
+  text-decoration: none;
+}
+
+div.explanation a:hover {
+  text-decoration: underline;
+}
+
+section.title img {
+  width: 10rem;
+  margin: 2rem;
+}
+
+section.about {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 50%;
+  margin: auto;
+  margin-bottom: 2rem;
+}
+
+div.about-text {
+  text-align: justify;
+}
+
+section.about a {
+  color: #4CAF50;
+  text-decoration: none;
+}
+
+section.about a:hover {
+  text-decoration: underline;
+}
+
+section.privacy-policy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 50%;
+  margin: auto;
+  margin-bottom: 2rem;
+}
+
+div.privacy-policy-text {
+  text-align: justify;
+}
+
+@media (max-width: 768px) {
+  section.results-container {
+    width: 80%;
+    margin-bottom: 2rem;
+  }
+
+  section.about {
+    width: 80%;
+    margin-bottom: 2rem;
+  }
+}
+
