@@ -2,16 +2,15 @@
 {% load static %}
 {% block content %}
     <main>
-        <section class="title">
-            <h1 class="title-text"><a href="{% url 'index' %}">How Many: MTG Calculator</a></h1>
-            <p>Build decks with a more consistent mana base</p>
-        </section>
-        <section class="form">
-            <form method="post" action="#results">
-                {% csrf_token %}
-                <label for="decklist"></label>
-                <textarea id="decklist" name="decklist" placeholder="How to enter your decklist (companion and sideboard are optional):
-
+        <div tabindex="0" class="content" onfocus="closeSidebar()" id="content">
+            <div class="title">
+                <h1 class="title-text">How Many: MTG Calculator</h1>
+                <p>Build decks with a more consistent mana base</p>
+            </div>
+            <div class="form-container">
+                <form method="post" action="#results">
+                    {% csrf_token %}
+                    <textarea tabindex="0" onfocus="closeSidebar()" id="decklist" name="decklist" placeholder="How to enter your decklist (companion and sideboard are optional):
 
 Companion
 1 Jegantha, the Wellspring
@@ -39,53 +38,59 @@ Sideboard
 ...
 
 "></textarea>
-                <input type="submit" value="How many lands do I need in my deck?">
-            </form>
-        </section>
-        <section class="results-container">
-            {% if result %}
-            <div class="analysis">
-                <p>Since your deck has <u><b>{{ result.companion_count }}</b></u> companion and <u><b>{{ result.card_count }}</b></u> cards, which <u><b>{{ result.non_land_count }}</b></u> are non-lands with <u><b>{{ result.non_land_cmcs_count }}</b></u> total CMC, <u><b>{{ result.cheap_card_draw_count }}</b></u> cheap card draw, <u><b>{{ result.cheap_card_scry_count }}</b></u> cheap card scry (while not an actual card draw spell, can still help you find lands sometimes, which means that it's fine to round down the land count), <u><b>{{ result.cheap_mana_ramp_count }}</b></u> cheap mana ramp, <u><b>{{ result.non_mythic_mdfc_count }}</b></u> non-mythic MDFC, <u><b>{{ result.mythic_mdfc_count }}</b></u> mythic MDFC and <u><b>{{ result.average_cmc }}</b></u> average CMC:</p>
-                <ul>
-                    {% if result.companion %}
-                    <li>This is your companion: <b>{{ result.companion }}</b></li>
-                    {% endif %}
-                    {% if result.cheap_card_draw_list %}
-                    <li>These are your cheap card draw: <b>{{ result.cheap_card_draw_list }}</b></li>
-                    {% endif %}
+                    <input type="submit" value="How many lands do I need in my deck?" class="submit-button" disabled>
+                </form>
+            </div>
+            <div class="explanation-container">
+                {% if result %}
+                <div class="analysis" id="results">
+                    <p>Your deck has <u><b>{{ result.companion_count }}</b></u> companion and <u><b>{{ result.card_count }}</b></u> cards, of which <u><b>{{ result.non_land_count }}</b></u> are non-lands with <u><b>{{ result.non_land_cmcs_count }}</b></u> total CMC, <u><b>{{ result.cheap_card_draw_count }}</b></u> cheap card draw, <u><b>{{ result.cheap_mana_ramp_count }}</b></u> cheap mana ramp, <u><b>{{ result.non_mythic_land_spell_mdfc_count }}</b></u> non-mythic land/spell MDFC, <u><b>{{ result.mythic_land_spell_mdfc_count }}</b></u> mythic land/spell MDFC and <u><b>{{ result.average_cmc }}</b></u> average CMC.</p>
+                    <ul>
+                        {% if result.companion %}
+                        <li>This is your companion: <b>{{ result.companion }}</b>.</li>
+                        {% endif %}
+                        {% if result.cheap_card_draw_list %}
+                        <li>These are your cheap card draw: <b>{{ result.cheap_card_draw_list }}</b>.</li>
+                        {% endif %}
+                        {% if result.cheap_mana_ramp_list %}
+                        <li>These are your cheap mana ramp: <b>{{ result.cheap_mana_ramp_list }}</b>.</li>
+                        {% endif %}
+                        {% if result.non_mythic_land_spell_mdfc_list %}
+                        <li>These are your non-mythic land/spell MDFC: <b>{{ result.non_mythic_land_spell_mdfc_list }}</b>.</li>
+                        {% endif %}
+                        {% if result.mythic_land_spell_mdfc_list %}
+                        <li>These are your mythic land/spell MDFC: <b>{{ result.mythic_land_spell_mdfc_list }}</b>.</li>
+                        {% endif %}
+                    </ul>
                     {% if result.cheap_card_scry_list %}
-                    <li>These are your cheap card scry: <b>{{ result.cheap_card_scry_list }}</b></li>
+                    {% if result.card_count == 60 %}
+                    <p>You also has <u><b>{{ result.cheap_card_scry_count }}</b></u> cheap card scry that, while not an actual card draw spell, can still help you find lands sometimes, which means that it's fine to round down the land count.</p>
+                    <ul>
+                        <li>These are your cheap card scry: <b>{{ result.cheap_card_scry_list }}</b>.</li>
+                    </ul>
                     {% endif %}
-                    {% if result.cheap_mana_ramp_list %}
-                    <li>These are your cheap mana ramp: <b>{{ result.cheap_mana_ramp_list }}</b></li>
                     {% endif %}
-                    {% if result.non_mythic_mdfc_list %}
-                    <li>These are your non-mythic MDFC: <b>{{ result.non_mythic_mdfc_list }}</b></li>
-                    {% endif %}
-                    {% if result.mythic_mdfc_list %}
-                    <li>These are your mythic MDFC: <b>{{ result.mythic_mdfc_list }}</b></li>
-                    {% endif %}
-                </ul>
+                </div>
+                <div class="recommended-lands">
+                    <p><strong>The recommended number of lands for your deck is <u>{{ result.recommended_number_of_lands }}</u></strong></p>
+                </div>
+                {% elif error_message %}
+                <div class="errors">
+                    <p class="error-message"><strong>{{ error_message }}</strong></p>
+                </div>
+                {% endif %}
+                <div class="explanation">
+                    <p>To calculate the recommended number of lands for your deck, <b>our approach is based on the solid research and analysis conducted by Magic: The Gathering Hall of Fame member, competitor in nearly 80 Pro Tours, and PhD in game theory mathematics and probability theory</b>, <a href="https://twitter.com/karsten_frank" target="_blank">Frank Karsten</a>. For a more detailed explanation of the formula, we suggest you go to the article <a href="https://www.channelfireball.com/article/how-many-lands-do-you-need-in-your-deck-an-updated-analysis/cd1c1a24-d439-4a8e-b369-b936edb0b38a/" target="_blank">"How Many Lands Do You Need In Your Deck?"</a></p>
+                    <p><b>It is important to emphasize that the formula is not perfect and may present discrepancies</b> with the actual number of lands needed. These discrepancies have several logical reasons, such as:</p>
+                    <ul>
+                        <li>The actual mana value does not always fully reflect a card's mana appetite.</li>
+                        <li>There are large requirements for colored mana, which can increase the required land count.</li>
+                        <li>The mana base can include multiple utility lands, all contributing to the total land count.</li>
+                        <li>Etc.</li>
+                    </ul>
+                    <p>However, even with its limitations, <b>the formula is an excellent starting reference for new deck builders</b>.</p>
+                </div>
             </div>
-            <div class="recommended-lands" id="results">
-                <p><strong>The recommended number of lands for your deck is <u>{{ result.recommended_number_of_lands }}</u></strong></p>
-            </div>
-            {% elif error_message %}
-            <div class="errors">
-                <p class="error-message"><strong>{{ error_message }}</strong></p>
-            </div>
-            {% endif %}
-            <div class="explanation">
-                <p>To calculate the recommended number of lands for your deck, <b>our approach is based on the solid research and analysis conducted by Magic: The Gathering Hall of Fame member, competitor in nearly 80 Pro Tours, and PhD in game theory mathematics and probability theory</b>, <a href="https://twitter.com/karsten_frank" target="_blank">Frank Karsten</a>. For a more detailed explanation of the formula, we suggest you go to the article <a href="https://www.channelfireball.com/article/how-many-lands-do-you-need-in-your-deck-an-updated-analysis/cd1c1a24-d439-4a8e-b369-b936edb0b38a/" target="_blank">"How Many Lands Do You Need In Your Deck?"</a></p>
-                <p><b>It is important to emphasize that the formula is not perfect and may present discrepancies</b> with the actual number of lands needed. These discrepancies have several logical reasons, such as:</p>
-                <ul>
-                    <li>The actual mana value does not always fully reflect a card's mana appetite.</li>
-                    <li>There are large requirements for colored mana, which can increase the required land count.</li>
-                    <li>The mana base can include multiple utility lands, all contributing to the total land count.</li>
-                    <li>Etc.</li>
-                </ul>
-                <p>However, even with its limitations, <b>the formula is an excellent starting reference for new deck builders</b>.</p>
-            </div>
-        </section>
+        </div>
     </main>
 {% endblock %}

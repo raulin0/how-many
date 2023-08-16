@@ -5,11 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How Many: MTG Calculator</title>
-    <link rel="icon" href="{% static 'lands/assets/how-many-favicon.ico' %}">
+    <link rel="icon" href="{% static 'lands/assets/howmanymtg-favicon.ico' %}">
     <link rel="stylesheet" href="{% static 'lands/css/lands.css' %}">
 </head>
-<body>
+<body id="body">
     {% include 'lands/partials/_header.html' %}
     {% block content %}{% endblock %}
 </body>
+<script src="{% static 'lands/sidebar.js' %}"></script>
+<script src="{% static 'lands/form_validation.js' %}"></script>
 </html>

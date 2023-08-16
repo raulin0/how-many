@@ -2,21 +2,22 @@
 {% load static %}
 {% block content %}
     <main>
-        <section class="title">
-            <img src="{% static 'lands/assets/how-many-logo.png' %}" alt="how many: mtg calculator logo">
-            <h1 class="title-text">
-                HI, HOW ARE YOU?
-            </h1>
-        </section>
-        <section class="about">
-            <div class="about-text">
-                <p><b>Welcome to How Many: MTG Calculator!</b> A project, by <a href="https://twitter.com/raulin0_" target="_blank">Marcos Raulino</a>, that was born from the passion for collectible cardgames, especially the famous "Magic: The Gathering". Its goal is to offer you an easy-to-use tool to optimize your decklists and enhance your gaming experience.</p>
-                <p>Here, we understand the fundamental importance of a well-ballanced mana base in your deck. We know that the right choice of the number of lands is crucial to ensure that your plays are consistent and that you have access to the mana you need at the right time.</p>
-                <p>Our approach is based on the solid research and analysis conducted by Magic: The Gathering Hall of Fame member, competitor in nearly 80 Pro Tours, and PhD in game theory mathematics and probability theory, <a href="https://twitter.com/karsten_frank" target="_blank">Frank Karsten</a>. The article <a href="https://www.channelfireball.com/article/how-many-lands-do-you-need-in-your-deck-an-updated-analysis/cd1c1a24-d439-4a8e-b369-b936edb0b38a/">"How Many Lands Do You Need In Your Deck?"</a> is a valuable reference in our platform. The formula developed by <a href="https://twitter.com/karsten_frank">Frank Karsten</a> is the basis of our system, allowing us to efficiently calculate the optimal number of lands for your decklist.</p>
-                <p>Using <b>How Many: MTG Calculator</b> is simple and intuitive. Just upload your list of cards and, with a few clicks, the tool will perform the necessary calculations to determine the proper proportion of lands. Whether you are building an aggressive deck to pressure your opponents or a control deck to dominate the game in the long run, the application will ensure that you base is solid and reliable.</p>
-                <p>Have fun, explorer and build decks with mana base more consistent  with the help of <b>How Many: MTG Calculator!</b></p>
-
+        <div tabindex="0" class="content" onfocus="closeSidebar()" id="content">
+            <div class="greeting">
+                <img src="{% static 'lands/assets/howmanymtg-logo.png' %}" alt="How Many: MTG Calculator Logo">
+                <h1 class="title-text">
+                    HI, HOW ARE YOU?
+                </h1>            
             </div>
-        </section>
+            <div class="about">
+                <div class="about-text">
+                    <p><b>Welcome to How Many: MTG Calculator!</b> A project, by <a href="https://twitter.com/raulin0_" target="_blank">Marcos Raulino</a>, that was born from the passion for collectible cardgames, especially the famous "Magic: The Gathering". Its goal is to offer you an easy-to-use tool to optimize your decklists and enhance your gaming experience.</p>
+                    <p>Here, we understand the fundamental importance of a well-ballanced mana base in your deck. We know that the right choice of the number of lands is crucial to ensure that your plays are consistent and that you have access to the mana you need at the right time.</p>
+                    <p><b>Our approach is based on the solid research and analysis conducted by Magic: The Gathering Hall of Fame member, competitor in nearly 80 Pro Tours, and PhD in game theory mathematics and probability theory</b>, <a href="https://twitter.com/karsten_frank" target="_blank">Frank Karsten</a>. The article <a href="https://www.channelfireball.com/article/how-many-lands-do-you-need-in-your-deck-an-updated-analysis/cd1c1a24-d439-4a8e-b369-b936edb0b38a/" target="_blank">"How Many Lands Do You Need In Your Deck?"</a> is a valuable reference in our platform. The formula developed by <a href="https://twitter.com/karsten_frank">Frank Karsten</a> is the basis of our system, allowing us to efficiently calculate the optimal number of lands for your decklist.</p>
+                    <p>Using <b>How Many: MTG Calculator</b> is simple and intuitive. Just upload your list of cards and, with a few clicks, the tool will perform the necessary calculations to determine the proper proportion of lands. Whether you are building an aggressive deck to pressure your opponents or a control deck to dominate the game in the long run, the application will ensure that you base is solid and reliable.</p>
+                    <p>Have fun, explorer and build decks with mana base more consistent  with the help of <b>How Many: MTG Calculator!</b></p>
+                </div>
+            </div>
+        </div>
     </main>
 {% endblock %}
