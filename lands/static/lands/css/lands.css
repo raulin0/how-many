@@ -1,90 +1,103 @@
-/* Font-Face Declarations */
-@font-face {
-  font-family: 'lexend-regular';
+@font-face{
+  font-family: 'lexend';
   src: url('/static/lands/assets/fonts/Lexend-Regular.ttf') format('truetype');
 }
 
-@font-face {
-  font-family: 'lexend-bold';
-  src: url('/static/lands/assets/fonts/Lexend-Bold.ttf') format('truetype');
+:root{
+  --primary-color: #4CAF50;
+  --secundary-color: #ffffff;
+  --fill-color: #f2f2f2;
+  --error-color: #b10000;
+  --title-color: #111111;
+  --subtitle-color: #555555;
+  --text-body-color: #333333;
 }
 
-@font-face {
-  font-family: 'lexend-black';
-  src: url('/static/lands/assets/fonts/Lexend-Black.ttf') format('truetype');
-}
-
-body {
-  font-family: 'lexend-regular', Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-items: center;
-  text-align: center;
-  padding: 0;
-  font-size: 1rem;
+*{
   margin: 0;
+  padding: 0;
 }
 
-header {
-  background-color: #4CAF50;
-  text-align: justify;
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  padding: 0.5rem;
+body{
+  font-family: 'lexend', Arial, sans-serif;
+  background-color: var(--secundary-color);
+  color: var(--text-body-color);
 }
 
-header p {
-  color: #ffffff;
-  margin-left: 1rem;
-  margin-right: 1rem;
+.img-logo-header{
+  width: 2.5rem;
 }
 
-header a {
-  color: #ffffff;
+.header, .navigation-header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.header{
+  background-color: var(--primary-color);
+  justify-content: space-between;
+  padding: 0 10%;
+  height: 3.5rem;
+}
+
+.navigation-header{
+  gap: 3rem;
+  z-index: 2;
+}
+
+.navigation-header a{
   text-decoration: none;
+  color: var(--secundary-color);
+  font-weight: bold;
 }
 
-header a:hover {
+.navigation-header a:hover{
   text-decoration: underline;
 }
 
-section.title {
-  color: #4CAF50;
-  margin-top: 7rem;
-}
-
-section.title p {
-  color: #000000;
+.content{
   text-align: center;
+  height: 100vh;
+  transition: 1s;
 }
 
-section.title a {
-  font-family: 'lexend-black', Arial, sans-serif;
-  color: #4CAF50;
-  text-decoration: none;
+.btn-icon-header{
+  display: none;
+  background-color: transparent;
+  border: none;
+  color: var(--secundary-color);
+  cursor: pointer;
 }
 
-section.title a:hover {
-  text-decoration: underline;
-}
-
-section.form {
+.title{
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: 50rem;
-  max-height: 40rem;
-  margin: 1rem auto;
-  padding: 1rem;
+  padding: 2rem;
 }
 
-textarea {
-  font-family: 'lexend-regular', Arial, sans-serif;
-  background-color: #f2f2f2;
+.title h1{
+  font-weight: bold;
+  color: var(--title-color);
+}
+
+.title p{
+  padding-top: 1rem;
+  color: var(--subtitle-color);
+}
+
+.form-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 2rem 2rem;
+}
+
+textarea{
+  font-family: 'lexend', Arial, sans-serif;
+  background-color: var(--fill-color);
   text-align: justify;
   width: 100%;
   height: 30rem;
@@ -95,11 +108,11 @@ textarea {
   resize: none;
 }
 
-input[type="submit"] {
-  font-family: 'lexend-regular', Arial, sans-serif;
-  background-color: #4CAF50;
-  color: #ffffff;
-  margin-top: 2rem;
+input[type="submit"]{
+  font-family: 'lexend', Arial, sans-serif;
+  background-color: var(--primary-color);
+  color: var(--secundary-color);
+  margin-top: 1rem;
   width: 100%;
   padding: 1rem;
   border: none;
@@ -108,94 +121,162 @@ input[type="submit"] {
   border-radius: 0.5rem;
 }
 
-input[type="submit"]:hover {
-  color: #000000;
-  background-color: #f2f2f2;
+input[type="submit"]:hover{
+  color: var(--subtitle-color);
+  background-color: var(--fill-color);
 }
 
-section.results-container {
+.explanation-container{
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 50%;
-  margin: auto;
-  margin-bottom: 2rem;
+  align-items: center;
+  width: 48rem;
+  margin: 0 auto;
 }
 
-div.analysis {
+.analysis{
   text-align: justify;
+  padding-bottom: 1rem;
 }
 
-div.errors {
+.analysis p{
+  padding-bottom: 1rem;
+}
+
+.analysis ul{
+  margin-left: 3rem;
+  padding-bottom: 1rem;
+}
+
+.recommended-lands{
   text-align: center;
 }
 
-div.errors p {
-  color: #b10000;
+.recommended-lands p{
+  padding-bottom: 2rem;
 }
 
-div.explanation {
+.errors{
+  text-align: center;
+}
+
+.errors p{
+  color: var(--error-color);
+  padding-bottom: 2rem;
+}
+
+.explanation{
   text-align: justify;
+  padding-bottom: 2rem;
 }
 
-div.explanation a {
-  color: #4CAF50;
+.explanation p{
+  padding-bottom: 1rem;
+}
+
+.explanation ul{
+  margin-left: 3rem;
+  padding-bottom: 1rem;
+}
+
+.explanation a{
+  color: var(--primary-color);
   text-decoration: none;
 }
 
-div.explanation a:hover {
+.explanation a:hover{
   text-decoration: underline;
 }
 
-section.title img {
+.greeting{
+  text-align: center;
+  padding: 2rem;
+}
+
+.greeting img{
   width: 10rem;
-  margin: 2rem;
 }
 
-section.about {
+.greeting h1{
+  font-weight: bold;
+  color: var(--title-color);
+  padding-top: 2rem;
+}
+
+.about{
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  width: 50%;
-  margin: auto;
-  margin-bottom: 2rem;
+  align-items: center;
+  width: 48rem;
+  margin: 0 auto;
 }
 
-div.about-text {
+.about-text{
   text-align: justify;
+  padding-bottom: 2rem;
 }
 
-section.about a {
-  color: #4CAF50;
+.about-text p{
+  padding-bottom: 1rem;
+}
+
+.about-text a{
+  color: var(--primary-color);
   text-decoration: none;
 }
 
-section.about a:hover {
+.about-text a:hover{
   text-decoration: underline;
 }
 
-section.privacy-policy {
+.privacy-policy{
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  width: 50%;
-  margin: auto;
-  margin-bottom: 2rem;
+  align-items: center;
+  width: 48rem;
+  margin: 0 auto;
 }
 
-div.privacy-policy-text {
+.privacy-policy-text{
   text-align: justify;
 }
 
-@media (max-width: 768px) {
-  section.results-container {
-    width: 80%;
-    margin-bottom: 2rem;
+@media screen and (max-width: 768px){
+  .navigation-header{
+    position: absolute;
+    flex-direction: column !important;
+    top: 0;
+    background: var(--primary-color);
+    height: 100%;
+    width: 35vw;
+    padding: 1rem;
+    animation-duration: .5s;
+    margin-left: -100vw;
+    text-align: center;
   }
 
-  section.about {
-    width: 80%;
-    margin-bottom: 2rem;
+  .btn-icon-header{
+      display: block;
+  }
+
+  @keyframes showSidebar {
+    from {margin-left: -100vw;}
+    to {margin-left: -10vw;}
+  }
+
+  .title{
+    font-size: 90%;
+  }
+
+  .explanation-container{
+    width: 85%;
+    margin: 0 auto;
+  }
+
+  .about{
+    width: 85%;
+    margin: 0 auto;
   }
 }
 
