@@ -93,6 +93,8 @@ body{
   justify-content: center;
   align-items: center;
   padding: 0 2rem 2rem;
+  width: 48rem;
+  margin: 0 auto;
 }
 
 textarea{
@@ -267,6 +269,11 @@ input[type="submit"]:hover{
 
   .title{
     font-size: 90%;
+  }
+
+  .form-container{
+    width: 85%;
+    margin: 0 auto;
   }
 
   .explanation-container{
