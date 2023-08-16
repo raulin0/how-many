@@ -18,10 +18,10 @@ class Analyzer:
         _cheap_card_scry_list (list): List of cards that provide cheap scrying.
         _cheap_mana_ramp_count (int): Count of cards that provide cheap mana ramp.
         _cheap_mana_ramp_list (list): List of cards that provide cheap mana ramp.
-        _non_mythic_mdfc_count (int): Count of non-mythic modal double-faced cards.
-        _non_mythic_mdfc_list (list): List of non-mythic modal double-faced cards.
-        _mythic_mdfc_count (int): Count of mythic modal double-faced cards.
-        _mythic_mdfc_list (list): List of mythic modal double-faced cards.
+        _non_mythic_land_spell_mdfc_count (int): Count of non-mythic land/spell modal double-faced cards.
+        _non_mythic_land_spell_mdfc_list (list): List of non-mythic land/spell modal double-faced cards.
+        _mythic_land_spell_mdfc_count (int): Count of mythic land/spell modal double-faced cards.
+        _mythic_land_spell_mdfc_list (list): List of mythic land/spell modal double-faced cards.
         _average_cmc (float): Average converted mana cost of non-land cards.
         _recommended_number_of_lands (float): Recommended number of lands based on analysis.
 
@@ -46,10 +46,10 @@ class Analyzer:
         self._cheap_card_scry_list = []
         self._cheap_mana_ramp_count = 0
         self._cheap_mana_ramp_list = []
-        self._non_mythic_mdfc_count = 0
-        self._non_mythic_mdfc_list = []
-        self._mythic_mdfc_count = 0
-        self._mythic_mdfc_list = []
+        self._non_mythic_land_spell_mdfc_count = 0
+        self._non_mythic_land_spell_mdfc_list = []
+        self._mythic_land_spell_mdfc_count = 0
+        self._mythic_land_spell_mdfc_list = []
         self._average_cmc = 0.0
         self._recommended_number_of_lands = 0.0
 
@@ -117,32 +117,32 @@ class Analyzer:
         return self._cheap_mana_ramp_list
 
     @property
-    def non_mythic_mdfc_count(self):
+    def non_mythic_land_spell_mdfc_count(self):
         """
-        int: The count of non-mythic modal double-faced cards in the deck.
+        int: The count of non-mythic land/spell modal double-faced cards in the deck.
         """
-        return self._non_mythic_mdfc_count
+        return self._non_mythic_land_spell_mdfc_count
 
     @property
-    def non_mythic_mdfc_list(self):
+    def non_mythic_land_spell_mdfc_list(self):
         """
-        list: A list of non-mythic modal double-faced cards in the deck.
+        list: A list of non-mythic land/spell modal double-faced cards in the deck.
         """
-        return self._non_mythic_mdfc_list
+        return self._non_mythic_land_spell_mdfc_list
 
     @property
-    def mythic_mdfc_count(self):
+    def mythic_land_spell_mdfc_count(self):
         """
-        int: The count of mythic modal double-faced cards in the deck.
+        int: The count of mythic land/spell modal double-faced cards in the deck.
         """
-        return self._mythic_mdfc_count
+        return self._mythic_land_spell_mdfc_count
 
     @property
-    def mythic_mdfc_list(self):
+    def mythic_land_spell_mdfc_list(self):
         """
-        list: A list of mythic modal double-faced cards in the deck.
+        list: A list of mythic land/spell modal double-faced cards in the deck.
         """
-        return self._mythic_mdfc_list
+        return self._mythic_land_spell_mdfc_list
 
     @property
     def average_cmc(self):
@@ -170,7 +170,9 @@ class Analyzer:
 
         # Iterate through maindeck cards and analyze each card
         for card, card_info_list in maindeck.items():
-            total_quantity = sum(card_info['quantity'] for card_info in card_info_list)
+            total_quantity = sum(
+                card_info['quantity'] for card_info in card_info_list
+            )
             self._card_count += total_quantity
             card_quantity = total_quantity
             try:
@@ -184,7 +186,7 @@ class Analyzer:
             self._average_cmc = self.non_land_cmcs_count / self.non_land_count
         else:
             raise ValueError(
-                'Invalid decklist. Non-land cards count or non-land cmcs count is not greater than 0.'
+                'Invalid decklist. Non-land cards count or non-land cmcs count must be greater than 0.'
             )
         self._calculate_number_of_lands(companion)
 
@@ -199,22 +201,34 @@ class Analyzer:
         """
         type_line = card_data.get('type_line', '').lower()
         layout = card_data.get('layout', '').lower()
-        oracle_text = card_data.get('oracle_text', '').lower()
-        cmc = card_data.get('cmc', 0)
 
-        # Determine if the card is a non-land card, possibly with a modal double-faced layout
+        # Determine if the card is a non-land card, possibly with a land/spell modal double-faced layout
         if 'land' not in type_line or (
             'modal_dfc' in layout
-            and not ('land' in card_data.get('card_faces', [{}])[0].get('type_line', '').lower())
+            and not (
+                'land'
+                in card_data.get('card_faces', [{}])[0]
+                .get('type_line', '')
+                .lower()
+            )
         ):
             self._non_land_count += card_quantity
+            cmc = card_data.get('cmc', 0)
             self._non_land_cmcs_count += card_quantity * cmc
 
-            # Analyze modal double-faced card, if applicable
-            if 'modal_dfc' in layout and 'land' in card_data.get('card_faces', [{}])[1].get('type_line', '').lower():
-                self._analyze_mdfc(card, card_data, card_quantity)
+            # Check if the card provides land/spell modal double-faced card
+            if self._is_land_spell_mdfc(layout, card_data):
+                # Determine if the land/spell modal double-faced card is mythic or non-mythic
+                rarity = card_data.get('rarity', '').lower()
+                if 'mythic' in rarity:
+                    self._mythic_land_spell_mdfc_list.append(card)
+                    self._mythic_land_spell_mdfc_count += card_quantity
+                else:
+                    self._non_mythic_land_spell_mdfc_list.append(card)
+                    self._non_mythic_land_spell_mdfc_count += card_quantity
 
             # Check if the card provides cheap card draw
+            oracle_text = card_data.get('oracle_text', '').lower()
             if self._is_cheap_card_draw(oracle_text, cmc, type_line):
                 self._cheap_card_draw_list.append(card)
                 self._cheap_card_draw_count += card_quantity
@@ -229,24 +243,28 @@ class Analyzer:
                 self._cheap_card_scry_list.append(card)
                 self._cheap_card_scry_count += card_quantity
 
-    def _analyze_mdfc(self, card, card_data, card_quantity):
+    def _is_land_spell_mdfc(self, layout, card_data):
         """
-        Analyzes a modal double-faced card and updates relevant statistics.
+        Checks if a card provides land/spell modal double-faced card based on its attributes.
 
         Args:
-            card (str): The name of the modal double-faced card being analyzed.
-            card_data (dict): Card data fetched using CardDataFetcher.
-            card_quantity (int): The quantity of the card in the deck.
-        """
-        rarity = card_data.get('rarity', '').lower()
+            layout (str): The layout of the card.
+            cmc (float): The converted mana cost of the card.
+            type_line (str): The type line of the card.
 
-        # Determine if the modal double-faced card is mythic or non-mythic
-        if 'mythic' in rarity:
-            self._mythic_mdfc_list.append(card)
-            self._mythic_mdfc_count += card_quantity
-        else:
-            self._non_mythic_mdfc_list.append(card)
-            self._non_mythic_mdfc_count += card_quantity
+        Returns:
+            bool: True if the card provides land/spell modal double-faced card, False otherwise.
+        """
+        if (
+            'modal_dfc' in layout
+            and 'land'
+            in card_data.get('card_faces', [{}])[1]
+            .get('type_line', '')
+            .lower()
+        ):
+            return True
+
+        return False
 
     def _is_cheap_card_draw(self, oracle_text, cmc, type_line):
         """
@@ -261,24 +279,43 @@ class Analyzer:
             bool: True if the card provides cheap card draw, False otherwise.
         """
         # Check for simple card draw effects
-        if oracle_text: 
+        if oracle_text:
             if cmc <= 2.0:
                 if 'draw' in oracle_text:
-                    if not ('{4}' in oracle_text or 'blood token' in oracle_text or 'investigate' in oracle_text):
+                    if not (
+                        '{4}' in oracle_text
+                        or 'blood token' in oracle_text
+                        or 'investigate' in oracle_text
+                    ):
                         if 'creature' in type_line:
-                            if 'when' in oracle_text and 'enters' in oracle_text:
+                            if (
+                                'when' in oracle_text
+                                and 'enters' in oracle_text
+                            ):
                                 return True
                         else:
                             return True
-                
+
                 # Check for "look at the top of your library" effects
                 elif not ('creature' in type_line):
-                    if 'look' in oracle_text and 'library' in oracle_text and 'put' in oracle_text and 'your hand' in oracle_text:
+                    if (
+                        'look' in oracle_text
+                        and 'library' in oracle_text
+                        and 'put' in oracle_text
+                        and 'your hand' in oracle_text
+                    ):
                         if not ('pay' in oracle_text):
                             return True
 
             # Check for cycling abilities
-            elif 'cycling {1}' in oracle_text or 'cycling {w}' in oracle_text or 'cycling {b}' in oracle_text or 'cycling {u}' in oracle_text or 'cycling {r}' in oracle_text or 'cycling {g}' in oracle_text:
+            if (
+                r'cycling {1}' in oracle_text
+                or r'cycling {w}' in oracle_text
+                or r'cycling {b}' in oracle_text
+                or r'cycling {u}' in oracle_text
+                or r'cycling {r}' in oracle_text
+                or r'cycling {g}' in oracle_text
+            ):
                 return True
 
         return False
@@ -297,54 +334,43 @@ class Analyzer:
             bool: True if the card provides cheap mana ramp, False otherwise.
         """
         # Check for mana ramp effects
-        if (
-            oracle_text
-            and cmc <= 2.0
-            and card not in self.cheap_card_draw_list
-            and 'add ' in oracle_text
-            and (
-                'add its ability' not in oracle_text
-                or 'add a lore counter' not in oracle_text
-            )
-        ):
-            if 'creature' in type_line:
-                if 'dies' not in oracle_text:
-                    return True
-            else:
-                return True
+        if oracle_text:
+            if cmc <= 2.0:
+                if not (card in self.cheap_card_draw_list):
+                    if 'add ' in oracle_text:
+                        if not ('add its ability' in oracle_text) or not (
+                            'add a lore counter' in oracle_text
+                        ):
+                            if 'creature' in type_line:
+                                if not ('dies' in oracle_text):
+                                    return True
+                            else:
+                                return True
 
-        # Check for land search effects
-        elif (
-            oracle_text
-            and cmc <= 2.0
-            and card not in self.cheap_card_draw_list
-            and 'search' in oracle_text
-            and 'your library' in oracle_text
-            and 'land' in oracle_text
-            and 'sacrifice' not in oracle_text
-        ):
-            return True
+                    # Check for land search effects
+                    elif (
+                        'search' in oracle_text
+                        and 'your library' in oracle_text
+                        and 'land' in oracle_text
+                    ):
+                        if not ('sacrifice' in oracle_text):
+                            return True
 
-        # Check for mana enhancement through tapping enchanted land
-        elif (
-            oracle_text
-            and cmc <= 2.0
-            and card not in self.cheap_card_draw_list
-            and 'enchanted land is tapped' in oracle_text
-            and 'adds an additional' in oracle_text
-        ):
-            return True
+                    # Check for mana enhancement through tapping enchanted land
+                    elif (
+                        'enchanted land is tapped' in oracle_text
+                        and 'adds and additional' in oracle_text
+                    ):
+                        return True
 
-        # Check for putting creatures into play from hand
-        elif (
-            oracle_text
-            and cmc <= 2.0
-            and card not in self.cheap_card_draw_list
-            and 'put' in oracle_text
-            and 'creature card with' in oracle_text
-            and 'from your hand onto the battlefield' in oracle_text
-        ):
-            return True
+                    # Check for putting creatures into play from hand
+                    elif (
+                        'put' in oracle_text
+                        and 'creature card with' in oracle_text
+                        and 'from your hand onto the battlefield'
+                        in oracle_text
+                    ):
+                        return True
 
         return False
 
@@ -362,17 +388,18 @@ class Analyzer:
             bool: True if the card provides cheap scrying, False otherwise.
         """
         # Check for scry effects
-        if (
-            oracle_text
-            and cmc <= 2.0
-            and card not in self.cheap_card_draw_list
-            and 'scry ' in oracle_text
-        ):
-            if 'creature' in type_line:
-                if 'when' in oracle_text and 'enters' in oracle_text:
-                    return True
-            else:
-                return True
+        if oracle_text:
+            if cmc <= 2.0:
+                if not (card in self.cheap_card_draw_list):
+                    if 'scry ' in oracle_text:
+                        if 'creature' in type_line:
+                            if (
+                                'when' in oracle_text
+                                and 'enters' in oracle_text
+                            ):
+                                return True
+                        else:
+                            return True
 
         return False
 
@@ -416,8 +443,8 @@ class Analyzer:
         self._recommended_number_of_lands = (
             self._recommended_number_of_lands
             - (
-                (0.38 * self.non_mythic_mdfc_count)
-                + (0.74 * self.mythic_mdfc_count)
+                (0.38 * self.non_mythic_land_spell_mdfc_count)
+                + (0.74 * self.mythic_land_spell_mdfc_count)
             )
         )
 
@@ -438,8 +465,8 @@ class Analyzer:
             80 / 60 * (19.59 + (1.90 * self.average_cmc) + 0.27)
         ) - (0.28 * (self.cheap_card_draw_count + self.cheap_mana_ramp_count))
         self._recommended_number_of_lands -= (
-            0.38 * self.non_mythic_mdfc_count
-        ) + (0.74 * self.mythic_mdfc_count)
+            0.38 * self.non_mythic_land_spell_mdfc_count
+        ) + (0.74 * self.mythic_land_spell_mdfc_count)
 
         self._recommended_number_of_lands = round(
             self._recommended_number_of_lands
@@ -458,8 +485,8 @@ class Analyzer:
             - 1.35
         )
         self._recommended_number_of_lands -= (
-            0.38 * self.non_mythic_mdfc_count
-        ) + (0.74 * self.mythic_mdfc_count)
+            0.38 * self.non_mythic_land_spell_mdfc_count
+        ) + (0.74 * self.mythic_land_spell_mdfc_count)
         self._recommended_number_of_lands = round(
             self._recommended_number_of_lands
         )
