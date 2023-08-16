@@ -16,10 +16,8 @@ def index(request):
     """
     if request.method == 'POST':
         # Get the decklist from the form data
-        decklist = request.POST.get('decklist')
-        if not decklist.strip():
-            # If decklist is empty, render the index page
-            return render(request, 'lands/index.html')
+        form = request.POST
+        decklist = form.get('decklist', '').strip()
 
         # Parse the decklist and analyze it
         try:
@@ -40,10 +38,18 @@ def index(request):
             cheap_card_scry_list = ', '.join(analyzer.cheap_card_scry_list)
             cheap_mana_ramp_count = analyzer.cheap_mana_ramp_count
             cheap_mana_ramp_list = ', '.join(analyzer.cheap_mana_ramp_list)
-            non_mythic_mdfc_count = analyzer.non_mythic_mdfc_count
-            non_mythic_mdfc_list = ', '.join(analyzer.non_mythic_mdfc_list)
-            mythic_mdfc_count = analyzer.mythic_mdfc_count
-            mythic_mdfc_list = ', '.join(analyzer.mythic_mdfc_list)
+            non_mythic_land_spell_mdfc_count = (
+                analyzer.non_mythic_land_spell_mdfc_count
+            )
+            non_mythic_land_spell_mdfc_list = ', '.join(
+                analyzer.non_mythic_land_spell_mdfc_list
+            )
+            mythic_land_spell_mdfc_count = (
+                analyzer.mythic_land_spell_mdfc_count
+            )
+            mythic_land_spell_mdfc_list = ', '.join(
+                analyzer.mythic_land_spell_mdfc_list
+            )
             average_cmc = f'{analyzer.average_cmc:.1f}'
             recommended_number_of_lands = analyzer.recommended_number_of_lands
 
@@ -64,10 +70,10 @@ def index(request):
                         'cheap_card_scry_list': cheap_card_scry_list,
                         'cheap_mana_ramp_count': cheap_mana_ramp_count,
                         'cheap_mana_ramp_list': cheap_mana_ramp_list,
-                        'non_mythic_mdfc_count': non_mythic_mdfc_count,
-                        'non_mythic_mdfc_list': non_mythic_mdfc_list,
-                        'mythic_mdfc_count': mythic_mdfc_count,
-                        'mythic_mdfc_list': mythic_mdfc_list,
+                        'non_mythic_land_spell_mdfc_count': non_mythic_land_spell_mdfc_count,
+                        'non_mythic_land_spell_mdfc_list': non_mythic_land_spell_mdfc_list,
+                        'mythic_land_spell_mdfc_count': mythic_land_spell_mdfc_count,
+                        'mythic_land_spell_mdfc_list': mythic_land_spell_mdfc_list,
                         'average_cmc': average_cmc,
                         'recommended_number_of_lands': recommended_number_of_lands,
                     }
@@ -80,7 +86,7 @@ def index(request):
             elif isinstance(e, AttributeError):
                 error_message = e
             elif isinstance(e, KeyError):
-                error_message = 'Invalid entry. You must explicitly enter each section that your deck list has. Example: Companion ... Deck ... Sideboard ...'
+                error_message = e
 
             return render(
                 request, 'lands/index.html', {'error_message': error_message}
