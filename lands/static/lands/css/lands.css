@@ -106,6 +106,7 @@ body{
   box-sizing: border-box;
   border-radius: 0.5rem;
   resize: none;
+  touch-action: manipulation;
 }
 
 .form-container input[type="submit"]{
