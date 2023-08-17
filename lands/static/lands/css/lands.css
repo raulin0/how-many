@@ -93,11 +93,9 @@ body{
   justify-content: center;
   align-items: center;
   padding: 0 2rem 2rem;
-  width: 48rem;
-  margin: 0 auto;
 }
 
-textarea{
+.form-container textarea{
   font-family: 'lexend', Arial, sans-serif;
   background-color: var(--fill-color);
   text-align: justify;
@@ -110,7 +108,7 @@ textarea{
   resize: none;
 }
 
-input[type="submit"]{
+.form-container input[type="submit"]{
   font-family: 'lexend', Arial, sans-serif;
   background-color: var(--primary-color);
   color: var(--secundary-color);
@@ -123,7 +121,7 @@ input[type="submit"]{
   border-radius: 0.5rem;
 }
 
-input[type="submit"]:hover{
+.form-container input[type="submit"]:hover{
   color: var(--subtitle-color);
   background-color: var(--fill-color);
 }
@@ -271,18 +269,13 @@ input[type="submit"]:hover{
     font-size: 90%;
   }
 
-  .form-container{
-    width: 85%;
-    margin: 0 auto;
-  }
-
   .explanation-container{
-    width: 85%;
+    width: 90%;
     margin: 0 auto;
   }
 
   .about{
-    width: 85%;
+    width: 90%;
     margin: 0 auto;
   }
 }
