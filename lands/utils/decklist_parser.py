@@ -40,7 +40,9 @@ class DecklistParser:
         lines = self._decklist.split('\r\n')
 
         if self._is_valid_decklist(lines):
-            card_pattern = r'^\s*(?P<quantity>\d+)\s+(?P<card_name>[\w\s\'\,\-]+)'
+            card_pattern = (
+                r'^\s*(?P<quantity>\d+)\s+(?P<card_name>[\w\s\'\,\-]+)'
+            )
             set_pattern = r'\((?P<set_code>\w+)\)\s+(?P<card_set_id>\d+)'
 
             current_section = None
@@ -69,7 +71,9 @@ class DecklistParser:
                         self._parsed_decklist[current_section].setdefault(
                             card_name, []
                         )
-                        self._parsed_decklist[current_section][card_name].append(
+                        self._parsed_decklist[current_section][
+                            card_name
+                        ].append(
                             {
                                 'quantity': quantity,
                                 'set_code': set_code,
@@ -78,24 +82,25 @@ class DecklistParser:
                         )
 
             return self._parsed_decklist
-        
+
         else:
-            raise KeyError('Invalid entry. Enter a valid decklist by explicitly entering each section that your decklist has. Example: Companion ... Deck ... Sideboard ...')
-    
+            raise KeyError(
+                'Invalid entry. Enter a valid decklist by explicitly entering each section that your decklist has. Example: Companion ... Deck ... Sideboard ...'
+            )
 
     def _is_valid_decklist(self, decklist):
         if self._is_valid_decklist_start(decklist):
             if self._is_valid_decklist_end(decklist):
                 return True
         return False
-    
+
     def _is_valid_decklist_start(self, decklist):
         if 'companion' in decklist[0]:
             if 'deck' in decklist[3]:
                 return True
-        
+
         elif 'deck' in decklist[0]:
-                return True
+            return True
 
     def _is_valid_decklist_end(self, decklist):
         deck_index = decklist.index('deck')
@@ -109,10 +114,7 @@ class DecklistParser:
                 ):
                     return True
 
-            elif (
-                sublist_after_deck.index('') + 1
-                == sublist_after_deck_len
-            ):
+            elif sublist_after_deck.index('') + 1 == sublist_after_deck_len:
                 return True
 
         elif 'sideboard' not in sublist_after_deck:
