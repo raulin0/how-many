@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
-from lands.utils.analyzer import Analyzer
-from lands.utils.decklist_parser import DecklistParser
+from utils.analyzer import Analyzer
+from utils.decklist_parser import DecklistParser
 
 
 def index(request):
@@ -53,12 +53,8 @@ def index(request):
             average_cmc = f'{analyzer.average_cmc:.1f}'
             recommended_number_of_lands = analyzer.recommended_number_of_lands
 
-            # Render the index page with result data
-            return render(
-                request,
-                'lands/index.html',
-                {
-                    'result': {
+            # Store the result data in the session to be accessed after the redirect
+            request.session['result_data'] = {
                         'companion_count': companion_count,
                         'companion': companion,
                         'card_count': card_count,
@@ -77,23 +73,29 @@ def index(request):
                         'average_cmc': average_cmc,
                         'recommended_number_of_lands': recommended_number_of_lands,
                     }
-                },
-            )
-        except (ValueError, AttributeError, KeyError) as e:
-            # Handle errors and render the index page with an error message
-            if isinstance(e, ValueError):
-                error_message = e
-            elif isinstance(e, AttributeError):
-                error_message = e
-            elif isinstance(e, KeyError):
-                error_message = e
 
-            return render(
-                request, 'lands/index.html', {'error_message': error_message}
-            )
+            # Redirect to a new URL to prevent form resubmission
+            return redirect('result_page')
+        except (ValueError, AttributeError, KeyError) as e:
+            # Handle errors
+            error_message = e
+            return render(request, 'lands/index.html', {'error_message': error_message})
     else:
+        # Clear any previous result data or error message from the session
+        request.session.pop('result_data', None)
         return render(request, 'lands/index.html')
 
+
+def result_page(request):
+    result_data = request.session.get('result_data')
+
+    if result_data:
+        # Clear the stored result data from the session
+        request.session.pop('result_data', None)
+        return render(request, 'lands/index.html', {'result': result_data})
+    else:
+        # If accessed directly without proper redirection, go back to the index page
+        return redirect('index')
 
 def about(request):
     """
