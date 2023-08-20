@@ -106,10 +106,9 @@ body{
   box-sizing: border-box;
   border-radius: 0.5rem;
   resize: none;
-  touch-action: manipulation;
 }
 
-.form-container input[type="submit"]{
+.form-container button[type="submit"]{
   font-family: 'lexend', Arial, sans-serif;
   background-color: var(--primary-color);
   color: var(--secundary-color);
@@ -122,7 +121,7 @@ body{
   border-radius: 0.5rem;
 }
 
-.form-container input[type="submit"]:hover{
+.form-container button[type="submit"]:hover{
   color: var(--subtitle-color);
   background-color: var(--fill-color);
 }
