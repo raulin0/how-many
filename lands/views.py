@@ -97,7 +97,7 @@ def result_page(request):
         # If accessed directly without proper redirection, go back to the index page
         return redirect('index')
 
-def about(request):
+def about_us(request):
     """
     Handles the about page view.
 
@@ -107,10 +107,10 @@ def about(request):
     Returns:
         HttpResponse: The HTTP response object with rendered content.
     """
-    return render(request, 'lands/about.html')
+    return render(request, 'lands/about_us.html')
 
 
-def privacy(request):
+def privacy_policy(request):
     """
     Handles the privacy page view.
 
@@ -120,4 +120,4 @@ def privacy(request):
     Returns:
         HttpResponse: The HTTP response object with rendered content.
     """
-    return render(request, 'lands/privacy.html')
+    return render(request, 'lands/privacy_policy.html')
