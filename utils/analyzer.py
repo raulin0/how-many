@@ -1,6 +1,6 @@
 import math
 
-from lands.utils.card_data_fetcher import CardDataFetcher
+from utils.card_data_fetcher import CardDataFetcher
 
 
 class Analyzer:
