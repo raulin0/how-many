@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 
 from utils.analyzer import Analyzer
 from utils.decklist_parser import DecklistParser
@@ -18,14 +18,13 @@ def index(request):
         # Get the decklist from the form data
         form = request.POST
         decklist = form.get('decklist', '').strip()
-
         # Parse the decklist and analyze it
+
         try:
             parser = DecklistParser(decklist)
             parser.parse_decklist()
             analyzer = Analyzer(parser.parsed_decklist)
             analyzer.analyze_decklist()
-
             # Extract data from the analyzer and parser
             companion_count = len(parser.parsed_decklist['companion'])
             companion = ', '.join(parser.parsed_decklist['companion'].keys())
@@ -53,49 +52,48 @@ def index(request):
             average_cmc = f'{analyzer.average_cmc:.1f}'
             recommended_number_of_lands = analyzer.recommended_number_of_lands
 
-            # Store the result data in the session to be accessed after the redirect
+            # Render the index page with result data
             request.session['result_data'] = {
-                        'companion_count': companion_count,
-                        'companion': companion,
-                        'card_count': card_count,
-                        'non_land_count': non_land_count,
-                        'non_land_cmcs_count': non_land_cmcs_count,
-                        'cheap_card_draw_count': cheap_card_draw_count,
-                        'cheap_card_draw_list': cheap_card_draw_list,
-                        'cheap_card_scry_count': cheap_card_scry_count,
-                        'cheap_card_scry_list': cheap_card_scry_list,
-                        'cheap_mana_ramp_count': cheap_mana_ramp_count,
-                        'cheap_mana_ramp_list': cheap_mana_ramp_list,
-                        'non_mythic_land_spell_mdfc_count': non_mythic_land_spell_mdfc_count,
-                        'non_mythic_land_spell_mdfc_list': non_mythic_land_spell_mdfc_list,
-                        'mythic_land_spell_mdfc_count': mythic_land_spell_mdfc_count,
-                        'mythic_land_spell_mdfc_list': mythic_land_spell_mdfc_list,
-                        'average_cmc': average_cmc,
-                        'recommended_number_of_lands': recommended_number_of_lands,
-                    }
+                'companion_count': companion_count,
+                'companion': companion,
+                'card_count': card_count,
+                'non_land_count': non_land_count,
+                'non_land_cmcs_count': non_land_cmcs_count,
+                'cheap_card_draw_count': cheap_card_draw_count,
+                'cheap_card_draw_list': cheap_card_draw_list,
+                'cheap_card_scry_count': cheap_card_scry_count,
+                'cheap_card_scry_list': cheap_card_scry_list,
+                'cheap_mana_ramp_count': cheap_mana_ramp_count,
+                'cheap_mana_ramp_list': cheap_mana_ramp_list,
+                'non_mythic_land_spell_mdfc_count': non_mythic_land_spell_mdfc_count,
+                'non_mythic_land_spell_mdfc_list': non_mythic_land_spell_mdfc_list,
+                'mythic_land_spell_mdfc_count': mythic_land_spell_mdfc_count,
+                'mythic_land_spell_mdfc_list': mythic_land_spell_mdfc_list,
+                'average_cmc': average_cmc,
+                'recommended_number_of_lands': recommended_number_of_lands,
+            }
 
-            # Redirect to a new URL to prevent form resubmission
-            return redirect('result_page')
+            return redirect('index')
+
         except (ValueError, AttributeError, KeyError) as e:
-            # Handle errors
-            error_message = e
-            return render(request, 'lands/index.html', {'error_message': error_message})
+            request.session['error_message'] = str(e).replace("'", '')
+
+            return redirect('index')
     else:
-        # Clear any previous result data or error message from the session
-        request.session.pop('result_data', None)
+        if 'result_data' in request.session:
+            result_data = request.session['result_data']
+            request.session.pop('result_data', None)
+            return render(request, 'lands/index.html', {'result': result_data})
+
+        elif 'error_message' in request.session:
+            error_message = request.session['error_message']
+            request.session.pop('error_message', None)
+            return render(
+                request, 'lands/index.html', {'error_message': error_message}
+            )
+
         return render(request, 'lands/index.html')
 
-
-def result_page(request):
-    result_data = request.session.get('result_data')
-
-    if result_data:
-        # Clear the stored result data from the session
-        request.session.pop('result_data', None)
-        return render(request, 'lands/index.html', {'result': result_data})
-    else:
-        # If accessed directly without proper redirection, go back to the index page
-        return redirect('index')
 
 def about_us(request):
     """
