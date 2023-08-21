@@ -6,26 +6,34 @@ from utils.decklist_parser import DecklistParser
 
 def index(request):
     """
-    Handles the index page view, including form submission and result rendering.
+    Handles the index page view, including decklist parsing and analysis.
+
+    This view function handles both GET and POST requests. For GET requests, it checks
+    if there is any stored result data or error message in the session, and renders the
+    appropriate template accordingly. For POST requests, it retrieves the decklist from
+    the form data, parses and analyzes it using the DecklistParser and Analyzer classes.
+    If the parsing and analysis are successful, it collects various data such as card
+    counts, companion information, card draw counts, etc., and stores this data in the
+    session. Then, it redirects back to the index page to display the analyzed data.
+    If there's an error during parsing or analysis, it catches the exceptions, stores
+    an error message in the session, and redirects back to the index page.
 
     Args:
         request (HttpRequest): The HTTP request object.
 
     Returns:
-        HttpResponse: The HTTP response object with rendered content.
+        HttpResponse: The HTTP response object that redirects to the index page with
+        analyzed data, or with an error message if the parsing/analysis fails.
     """
     if request.method == 'POST':
-        # Get the decklist from the form data
         form = request.POST
         decklist = form.get('decklist', '').strip()
-        # Parse the decklist and analyze it
 
         try:
             parser = DecklistParser(decklist)
             parser.parse_decklist()
             analyzer = Analyzer(parser.parsed_decklist)
             analyzer.analyze_decklist()
-            # Extract data from the analyzer and parser
             companion_count = len(parser.parsed_decklist['companion'])
             companion = ', '.join(parser.parsed_decklist['companion'].keys())
             card_count = analyzer.card_count
@@ -52,7 +60,6 @@ def index(request):
             average_cmc = f'{analyzer.average_cmc:.1f}'
             recommended_number_of_lands = analyzer.recommended_number_of_lands
 
-            # Render the index page with result data
             request.session['result_data'] = {
                 'companion_count': companion_count,
                 'companion': companion,
