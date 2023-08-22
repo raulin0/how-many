@@ -18,8 +18,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" >
     <title>How Many: MTG Calculator</title>
-    <link rel="icon" href="{% static 'lands/assets/howmanymtg-favicon.ico' %}">
-    <link rel="stylesheet" href="{% static 'lands/css/lands.css' %}">
+    <link rel="icon" href="{% static 'assets/howmanymtg-favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
 </head>
 <body id="body">
     <!-- Google Tag Manager (noscript) -->
@@ -28,10 +28,10 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
-    {% include 'lands/partials/_header.html' %}
+    {% include 'partials/_header.html' %}
     {% block content %}{% endblock %}
 </body>
-<script src="{% static 'lands/js/decklist_form.js' %}"></script>
-<script src="{% static 'lands/js/sidebar.js' %}"></script>
-<script src="{% static 'lands/js/results_scroll.js' %}"></script>
+<script src="{% static 'decklist_analyzer/js/decklist_form.js' %}"></script>
+<script src="{% static 'js/sidebar.js' %}"></script>
+<script src="{% static 'decklist_analyzer/js/results_scroll.js' %}"></script>
 </html>

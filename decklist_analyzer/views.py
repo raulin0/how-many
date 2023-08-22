@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 
-from utils.analyzer import Analyzer
-from utils.decklist_parser import DecklistParser
+from decklist_analyzer.utils.analyzer import Analyzer
+from decklist_analyzer.utils.decklist_parser import DecklistParser
 
 
 def index(request):
@@ -34,6 +34,7 @@ def index(request):
             parser.parse_decklist()
             analyzer = Analyzer(parser.parsed_decklist)
             analyzer.analyze_decklist()
+            
             companion_count = len(parser.parsed_decklist['companion'])
             companion = ', '.join(parser.parsed_decklist['companion'].keys())
             card_count = analyzer.card_count
@@ -90,39 +91,13 @@ def index(request):
         if 'result_data' in request.session:
             result_data = request.session['result_data']
             request.session.pop('result_data', None)
-            return render(request, 'lands/index.html', {'result': result_data})
+            return render(request, 'decklist_analyzer/index.html', {'result': result_data})
 
         elif 'error_message' in request.session:
             error_message = request.session['error_message']
             request.session.pop('error_message', None)
             return render(
-                request, 'lands/index.html', {'error_message': error_message}
+                request, 'decklist_analyzer/index.html', {'error_message': error_message}
             )
 
-        return render(request, 'lands/index.html')
-
-
-def about_us(request):
-    """
-    Handles the about page view.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-
-    Returns:
-        HttpResponse: The HTTP response object with rendered content.
-    """
-    return render(request, 'lands/about_us.html')
-
-
-def privacy_policy(request):
-    """
-    Handles the privacy page view.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-
-    Returns:
-        HttpResponse: The HTTP response object with rendered content.
-    """
-    return render(request, 'lands/privacy_policy.html')
+        return render(request, 'decklist_analyzer/index.html')

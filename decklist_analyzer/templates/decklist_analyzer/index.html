@@ -1,4 +1,4 @@
-{% extends 'lands/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 {% block content %}
     <main>
@@ -44,6 +44,7 @@ Sideboard
             <div class="explanation-container">
                 {% if result %}
                 <div class="analysis" id="results">
+                    <h2>How Many: MTG Calculator</h2>
                     <p>Your deck has <u><b>{{ result.companion_count }}</b></u> companion and <u><b>{{ result.card_count }}</b></u> cards, of which <u><b>{{ result.non_land_count }}</b></u> are non-lands with <u><b>{{ result.non_land_cmcs_count }}</b></u> total CMC, <u><b>{{ result.cheap_card_draw_count }}</b></u> cheap card draw, <u><b>{{ result.cheap_mana_ramp_count }}</b></u> cheap mana ramp, <u><b>{{ result.non_mythic_land_spell_mdfc_count }}</b></u> non-mythic land/spell MDFC, <u><b>{{ result.mythic_land_spell_mdfc_count }}</b></u> mythic land/spell MDFC and <u><b>{{ result.average_cmc }}</b></u> average CMC.</p>
                     <ul>
                         {% if result.companion %}
