@@ -30,7 +30,7 @@ function closeSidebar()
 }
 
 window.addEventListener('resize', function(event) {
-    if(window.innerWidth > 768 && showSidebar) 
+    if(window.innerWidth > 1000 && showSidebar) 
     {  
         showSidebar = true;
         toggleSidebar();
