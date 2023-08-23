@@ -3,9 +3,9 @@
 {% block content %}
     <main>
         <div tabindex="0" class="content" onfocus="closeSidebar()" id="content">
-            <div class="title">
-                <h1 id="title-text">How Many: MTG Calculator</h1>
-                <p id="subtitle-text">Build decks with a more consistent mana base</p>
+            <div class="title-container">
+                <h1>How Many: MTG Calculator</h1>
+                <p>Build decks with a more consistent mana base</p>
             </div>
             <div class="form-container">
                 <form id="decklist-form" method="post">
@@ -44,7 +44,7 @@ Sideboard
             <div class="explanation-container">
                 {% if result %}
                 <div class="analysis" id="results">
-                    <h2>How Many: MTG Calculator</h2>
+                    <h2>Decklist Analysis</h2>
                     <p>Your deck has <u><b>{{ result.companion_count }}</b></u> companion and <u><b>{{ result.card_count }}</b></u> cards, of which <u><b>{{ result.non_land_count }}</b></u> are non-lands with <u><b>{{ result.non_land_cmcs_count }}</b></u> total CMC, <u><b>{{ result.cheap_card_draw_count }}</b></u> cheap card draw, <u><b>{{ result.cheap_mana_ramp_count }}</b></u> cheap mana ramp, <u><b>{{ result.non_mythic_land_spell_mdfc_count }}</b></u> non-mythic land/spell MDFC, <u><b>{{ result.mythic_land_spell_mdfc_count }}</b></u> mythic land/spell MDFC and <u><b>{{ result.average_cmc }}</b></u> average CMC.</p>
                     <ul>
                         {% if result.companion %}
@@ -72,16 +72,12 @@ Sideboard
                     {% endif %}
                     {% endif %}
                 </div>
-                <div class="recommended-lands">
-                    <p><strong>The recommended number of lands for your deck is <u>{{ result.recommended_number_of_lands }}</u></strong></p>
-                </div>
+                <p id="recommended-lands"><strong>The recommended number of lands for your deck is <u>{{ result.recommended_number_of_lands }}</u></strong></p>
                 {% elif error_message %}
-                <div class="errors">
-                    <p id="error-message"><strong>{{ error_message }}</strong></p>
-                </div>
+                <p id="error-message"><strong>{{ error_message }}</strong></p>
                 {% endif %}
-                <div class="explanation">
-                    <p>To calculate the recommended number of lands for your deck, <b>our approach is based on the solid research and analysis conducted by Magic: The Gathering Hall of Fame member, competitor in nearly 80 Pro Tours, and PhD in game theory mathematics and probability theory</b>, <a href="https://twitter.com/karsten_frank" target="_blank">Frank Karsten</a>. For a more detailed explanation of the formula, we suggest you go to the article <a href="https://www.channelfireball.com/article/how-many-lands-do-you-need-in-your-deck-an-updated-analysis/cd1c1a24-d439-4a8e-b369-b936edb0b38a/" target="_blank">"How Many Lands Do You Need In Your Deck?".</a></p>
+                <div class="about-formula-container">
+                    <h2>About The Formula</h2>
                     <p><b>It is important to emphasize that the formula is not perfect and may present discrepancies</b> with the actual number of lands needed. These discrepancies have several logical reasons, such as:</p>
                     <ul>
                         <li>The actual mana value does not always fully reflect a card's mana appetite.</li>
@@ -89,7 +85,7 @@ Sideboard
                         <li>The mana base can include multiple utility lands, all contributing to the total land count.</li>
                         <li>Etc.</li>
                     </ul>
-                    <p>However, even with its limitations, <b>the formula is an excellent starting reference for new deck builders</b>.</p>
+                    <p>However, even with its limitations, <b>the formula is an excellent starting reference for new deck builders</b>. For a more detailed explanation of the formula, we suggest you consult the article <a href="https://www.channelfireball.com/article/how-many-lands-do-you-need-in-your-deck-an-updated-analysis/cd1c1a24-d439-4a8e-b369-b936edb0b38a/" target="_blank">"How Many Lands Do You Need In Your Deck?"</a>, by <a href="https://twitter.com/karsten_frank" target="_blank">Frank Karsten</a>, a member of the Magic: The Gathering Hall of Fame, competitor in almost 80 Pro Tours and PhD in game theory, mathematics and probability theory, <b>in which he conducted out solid research and analysis.</b></p>
                 </div>
             </div>
         </div>
