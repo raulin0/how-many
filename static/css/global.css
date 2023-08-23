@@ -1,9 +1,9 @@
-@font-face{
+@font-face {
   font-family: 'lexend';
   src: url('/static/assets/fonts/Lexend-Regular.ttf') format('truetype');
 }
 
-:root{
+:root {
   --primary-color: #4CAF50;
   --secundary-color: #ffffff;
   --fill-color: #f2f2f2;
@@ -13,56 +13,56 @@
   --text-body-color: #333333;
 }
 
-*{
+* {
   margin: 0;
   padding: 0;
 }
 
-body{
+body {
   font-family: 'lexend', Arial, sans-serif;
   background-color: var(--secundary-color);
   color: var(--text-body-color);
 }
 
-.img-logo-header{
+.img-logo-header {
   width: 2.5rem;
 }
 
-.header, .navigation-header{
+.header, .navigation-header {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
-.header{
+.header {
   background-color: var(--primary-color);
   justify-content: space-between;
   padding: 0 10%;
   height: 3.5rem;
 }
 
-.navigation-header{
+.navigation-header {
   gap: 3rem;
   z-index: 2;
 }
 
-.navigation-header a{
+.navigation-header a {
   text-decoration: none;
   color: var(--secundary-color);
   font-weight: bold;
 }
 
-.navigation-header a:hover{
+.navigation-header a:hover {
   text-decoration: underline;
 }
 
-.content{
+.content {
   text-align: center;
   height: 100vh;
   transition: 1s;
 }
 
-.btn-icon-header{
+.btn-icon-header {
   display: none;
   background-color: transparent;
   border: none;
@@ -70,32 +70,33 @@ body{
   cursor: pointer;
 }
 
-.title{
+.title-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 2rem;
+  margin: 2rem;
 }
 
-.title h1{
+.title-container h1 {
   font-weight: bold;
   color: var(--title-color);
 }
 
-.title p{
-  padding-top: 1rem;
+.title-container p {
+  margin-top: 1rem;
   color: var(--subtitle-color);
 }
 
-.form-container{
+.form-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0 0 2rem 0;
+  margin-bottom: 2rem;
 }
 
-.form-container textarea{
+.form-container textarea {
   font-family: 'lexend', Arial, sans-serif;
   background-color: var(--fill-color);
   text-align: justify;
@@ -108,7 +109,7 @@ body{
   resize: none;
 }
 
-.form-container button[type="submit"]{
+.form-container button[type="submit"] {
   font-family: 'lexend', Arial, sans-serif;
   background-color: var(--primary-color);
   color: var(--secundary-color);
@@ -122,12 +123,12 @@ body{
   transition: background-color 0.3s ease;
 }
 
-.form-container button[type="submit"]:active{
+.form-container button[type="submit"]:active {
   color: var(--subtitle-color);
   background-color: var(--fill-color);
 }
 
-.explanation-container{
+.explanation-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -136,115 +137,224 @@ body{
   margin: 0 auto;
 }
 
-.analysis{
+.analysis {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   text-align: justify;
-  padding-bottom: 1rem;
+  margin: 1rem 0 2rem 0;
+}
+
+.analysis h2 {
+  font-weight: bold;
+  color: --subtitle-color;
+  margin: 1rem 0 2rem 0;
 }
 
 .analysis p{
-  padding-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 .analysis ul{
   margin-left: 3rem;
-  padding-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
-.recommended-lands{
+#recommended-lands{
   text-align: center;
+  background-color: var(--fill-color);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border-radius: 0.5rem;
 }
 
-.recommended-lands p{
-  padding-bottom: 2rem;
-}
-
-.errors{
+#error-message {
   text-align: center;
-}
-
-.errors p{
   color: var(--error-color);
-  padding-bottom: 2rem;
+  margin: 1rem 0 2rem 0;
 }
 
-.explanation{
+.about-formula-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   text-align: justify;
-  padding-bottom: 2rem;
+  margin: 1rem 0 2rem 0;
 }
 
-.explanation p{
-  padding-bottom: 1rem;
+.about-formula-container h2 {
+  font-weight: bold;
+  color: --subtitle-color;
+  margin: 1rem 0 2rem 0;
 }
 
-.explanation ul{
+.about-formula-container p {
+  margin-bottom: 1rem;
+}
+
+.about-formula-container ul {
   margin-left: 3rem;
-  padding-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
-.explanation a{
+.about-formula-container a {
   color: var(--primary-color);
   text-decoration: none;
 }
 
-.explanation a:hover{
+.about-formula-container a:hover {
   text-decoration: underline;
 }
 
-.greeting{
+.greeting-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  padding: 2rem;
+  margin: 2rem;
 }
 
-.greeting img{
+.greeting-container img {
   width: 10rem;
 }
 
-.greeting h1{
+.greeting-container h1 {
   font-weight: bold;
   color: var(--title-color);
-  padding-top: 2rem;
+  margin-top: 2rem;
 }
 
-.about{
+.about-us-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 48rem;
   margin: 0 auto;
 }
 
-.about-text{
+.about-us-text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   text-align: justify;
-  padding-bottom: 2rem;
+  margin: 1rem 0 2rem 0;
 }
 
-.about-text p{
-  padding-bottom: 1rem;
+.about-us-text-container p {
+  text-align: justify;
+  margin-bottom: 1rem;
 }
 
-.about-text a{
+.about-us-text-container a {
   color: var(--primary-color);
   text-decoration: none;
 }
 
-.about-text a:hover{
+.about-us-text-container a:hover {
   text-decoration: underline;
 }
 
-.privacy-policy{
+.privacy-policy-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  text-align: justify;
   width: 48rem;
   margin: 0 auto;
 }
 
-.privacy-policy-text{
+.privacy-policy-text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   text-align: justify;
+  margin: 1rem 0 2rem 0;
 }
 
-@media screen and (max-width: 768px){
-  .navigation-header{
+.privacy-policy-text-container h2 {
+  font-weight: bold;
+  color: --subtitle-color;
+  margin: 1rem 0 2rem 0;
+}
+
+.privacy-policy-text-container h3 {
+  font-weight: bold;
+  color: --subtitle-color;
+  margin: 1rem 0 2rem 0;
+}
+
+.privacy-policy-text-container p {
+  text-align: justify;
+  margin-bottom: 1rem;
+}
+
+.privacy-policy-text-container ul {
+  margin-left: 3rem;
+  margin-bottom: 1rem;
+}
+
+.privacy-policy-text-container a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.privacy-policy-text-container a:hover {
+  text-decoration: underline;
+}
+
+.terms-of-service-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: justify;
+  width: 48rem;
+  margin: 0 auto;
+}
+
+.terms-of-service-text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: justify;
+  margin: 1rem 0 2rem 0;
+}
+
+.terms-of-service-text-container h2 {
+  font-weight: bold;
+  color: --subtitle-color;
+  margin: 1rem 0 2rem 0;
+}
+
+.terms-of-service-text-container h3 {
+  font-weight: bold;
+  color: --subtitle-color;
+  margin: 1rem 0 2rem 0;
+}
+
+.terms-of-service-text-container p {
+  text-align: justify;
+  margin-bottom: 1rem;
+}
+
+.terms-of-service-text-container ul {
+  margin-left: 3rem;
+  margin-bottom: 1rem;
+}
+
+.terms-of-service-text-container a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.terms-of-service-text-container a:hover {
+  text-decoration: underline;
+}
+
+
+@media screen and (max-width: 1000px){
+  .navigation-header {
     position: absolute;
     flex-direction: column !important;
     top: 0;
@@ -257,7 +367,7 @@ body{
     text-align: center;
   }
 
-  .btn-icon-header{
+  .btn-icon-header {
       display: block;
   }
 
@@ -266,20 +376,30 @@ body{
     to {margin-left: -10vw;}
   }
 
-  .title{
+  .title-container {
     font-size: 90%;
   }
 
-  .form-container{
-    padding: 0 1rem 2rem 1rem;
+  .form-container {
+    margin: 0 1rem 2rem 1rem;
   }
 
-  .explanation-container{
+  .explanation-container {
     width: 90%;
     margin: 0 auto;
   }
 
-  .about{
+  .about-us-container {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .privacy-policy-container {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .terms-of-service-container {
     width: 90%;
     margin: 0 auto;
   }
