@@ -22,6 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('decklist_analyzer.urls')),
     path('about-us/', TemplateView.as_view(template_name='about_us.html'), name='about_us'),
-    path('privacy_policy/', TemplateView.as_view(template_name='privacy_policy.html'), name='privacy_policy'),
-    path('terms_of_service/', TemplateView.as_view(template_name='terms_of_service.html'), name='terms_of_service'),
+    path('privacy-policy/', TemplateView.as_view(template_name='privacy_policy.html'), name='privacy_policy'),
+    path('terms-of-service/', TemplateView.as_view(template_name='terms_of_service.html'), name='terms_of_service'),
 ]
