@@ -203,7 +203,7 @@ class Analyzer:
         layout = card_data.get('layout', '').lower()
 
         # Determine if the card is a non-land card, possibly with a land/spell modal double-faced layout
-        if 'land' not in type_line or (
+        if not ('land' in type_line) or (
             'modal_dfc' in layout
             and not (
                 'land'
@@ -347,6 +347,18 @@ class Analyzer:
                             else:
                                 return True
 
+                    # Check for land untap effects
+                    elif (
+                        ('untap target land' in oracle_text)
+                        or ('untap target snow land' in oracle_text)
+                        or ('untap target forest' in oracle_text)
+                        or ('untap target swamp' in oracle_text)
+                        or ('untap target mountain' in oracle_text)
+                        or ('untap target island' in oracle_text)
+                        or ('untap target plains' in oracle_text)
+                    ):
+                        return True
+
                     # Check for land search effects
                     elif (
                         'search' in oracle_text
@@ -358,10 +370,16 @@ class Analyzer:
 
                     # Check for mana enhancement through tapping enchanted land
                     elif (
-                        'enchanted land is tapped' in oracle_text
-                        and 'adds and additional' in oracle_text
+                        ('enchanted land is tapped' in oracle_text)
+                        or ('enchanted snow land is tapped' in oracle_text)
+                        or ('enchanted forest is tapped' in oracle_text)
+                        or ('enchanted swamp is tapped' in oracle_text)
+                        or ('enchanted mountain is tapped' in oracle_text)
+                        or ('enchanted island is tapped' in oracle_text)
+                        or ('enchanted plains is tapped' in oracle_text)
                     ):
-                        return True
+                        if 'adds and additional' in oracle_text:
+                            return True
 
                     # Check for putting creatures into play from hand
                     elif (
