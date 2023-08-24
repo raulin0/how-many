@@ -34,7 +34,7 @@ def index(request):
             parser.parse_decklist()
             analyzer = Analyzer(parser.parsed_decklist)
             analyzer.analyze_decklist()
-            
+
             companion_count = len(parser.parsed_decklist['companion'])
             companion = ', '.join(parser.parsed_decklist['companion'].keys())
             card_count = analyzer.card_count
@@ -91,13 +91,19 @@ def index(request):
         if 'result_data' in request.session:
             result_data = request.session['result_data']
             request.session.pop('result_data', None)
-            return render(request, 'decklist_analyzer/index.html', {'result': result_data})
+            return render(
+                request,
+                'decklist_analyzer/index.html',
+                {'result': result_data},
+            )
 
         elif 'error_message' in request.session:
             error_message = request.session['error_message']
             request.session.pop('error_message', None)
             return render(
-                request, 'decklist_analyzer/index.html', {'error_message': error_message}
+                request,
+                'decklist_analyzer/index.html',
+                {'error_message': error_message},
             )
 
         return render(request, 'decklist_analyzer/index.html')
