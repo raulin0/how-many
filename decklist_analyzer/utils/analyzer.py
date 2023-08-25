@@ -370,15 +370,15 @@ class Analyzer:
 
                     # Check for mana enhancement through tapping enchanted land
                     elif (
-                        ('enchanted land is tapped' in oracle_text)
-                        or ('enchanted snow land is tapped' in oracle_text)
-                        or ('enchanted forest is tapped' in oracle_text)
-                        or ('enchanted swamp is tapped' in oracle_text)
-                        or ('enchanted mountain is tapped' in oracle_text)
-                        or ('enchanted island is tapped' in oracle_text)
-                        or ('enchanted plains is tapped' in oracle_text)
+                        ('enchanted land' in oracle_text)
+                        or ('enchanted snow land' in oracle_text)
+                        or ('enchanted forest' in oracle_text)
+                        or ('enchanted swamp' in oracle_text)
+                        or ('enchanted mountain' in oracle_text)
+                        or ('enchanted island' in oracle_text)
+                        or ('enchanted plains' in oracle_text)
                     ):
-                        if 'adds and additional' in oracle_text:
+                        if 'adds an additional' in oracle_text:
                             return True
 
                     # Check for putting creatures into play from hand
@@ -429,9 +429,11 @@ class Analyzer:
             companion (int): The number of companion cards in the deck.
 
         Raises:
-            ValueError: If the deck size is not 60, 80, or 99 cards.
+            ValueError: If the deck size is not 40, 60, 80, or 99 cards.
         """
-        if self._card_count == 60:
+        if self._card_count == 40:
+            self._lands_40_cards(companion)
+        elif self._card_count == 60:
             self._lands_60_cards(companion)
         elif self._card_count == 80:
             self._lands_80_cards()
@@ -439,7 +441,37 @@ class Analyzer:
             self._lands_99_cards()
         else:
             raise ValueError(
-                'Invalid decklist. Deck size must be 60, 80, or 99 cards.'
+                'Invalid decklist. Deck size must be 40, 60, 80, or 99 cards.'
+            )
+
+    def _lands_40_cards(self, companion):
+        """
+        Calculates the recommended number of lands for a 40-card deck.
+
+        Args:
+            companion (int): The number of companion cards in the deck.
+        """
+        self._recommended_number_of_lands = (
+            40
+            / 60
+            * (19.59 + ((1.90 * self.average_cmc) + (0.27 * companion)))
+        ) - (0.28 * (self.cheap_card_draw_count + self.cheap_mana_ramp_count))
+
+        self._recommended_number_of_lands = (
+            self._recommended_number_of_lands
+            - (
+                (0.38 * self.non_mythic_land_spell_mdfc_count)
+                + (0.74 * self.mythic_land_spell_mdfc_count)
+            )
+        )
+
+        if self.cheap_card_scry_count >= 4:
+            self._recommended_number_of_lands = math.floor(
+                self._recommended_number_of_lands
+            )
+        else:
+            self._recommended_number_of_lands = round(
+                self._recommended_number_of_lands
             )
 
     def _lands_60_cards(self, companion):
@@ -458,6 +490,7 @@ class Analyzer:
             )
             + (0.27 * companion)
         )
+
         self._recommended_number_of_lands = (
             self._recommended_number_of_lands
             - (
@@ -482,6 +515,7 @@ class Analyzer:
         self._recommended_number_of_lands = (
             80 / 60 * (19.59 + (1.90 * self.average_cmc) + 0.27)
         ) - (0.28 * (self.cheap_card_draw_count + self.cheap_mana_ramp_count))
+
         self._recommended_number_of_lands -= (
             0.38 * self.non_mythic_land_spell_mdfc_count
         ) + (0.74 * self.mythic_land_spell_mdfc_count)
@@ -502,9 +536,11 @@ class Analyzer:
             )
             - 1.35
         )
+
         self._recommended_number_of_lands -= (
             0.38 * self.non_mythic_land_spell_mdfc_count
         ) + (0.74 * self.mythic_land_spell_mdfc_count)
+
         self._recommended_number_of_lands = round(
             self._recommended_number_of_lands
         )
