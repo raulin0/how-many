@@ -427,68 +427,22 @@ class Analyzer:
 
         Args:
             companion (int): The number of companion cards in the deck.
-
-        Raises:
-            ValueError: If the deck size is not 40, 60, 80, or 99 cards.
         """
-        if self._card_count == 40:
-            self._lands_40_cards(companion)
-        elif self._card_count == 60:
-            self._lands_60_cards(companion)
-        elif self._card_count == 80:
-            self._lands_80_cards()
-        elif self._card_count == 99:
-            self._lands_99_cards()
-        else:
-            raise ValueError(
-                'Invalid decklist. Deck size must be 40, 60, 80, or 99 cards.'
-            )
+        commander_free_mulligan_draw_reduction = 0
 
-    def _lands_40_cards(self, companion):
-        """
-        Calculates the recommended number of lands for a 40-card deck.
+        if self.card_count == 99:
+            commander_free_mulligan_draw_reduction = 1.35
 
-        Args:
-            companion (int): The number of companion cards in the deck.
-        """
+        if self.card_count == 80 or self.card_count == 99:
+            companion = 1
+
         self._recommended_number_of_lands = (
-            40
+            self.card_count
             / 60
             * (19.59 + ((1.90 * self.average_cmc) + (0.27 * companion)))
-        ) - (0.28 * (self.cheap_card_draw_count + self.cheap_mana_ramp_count))
-
-        self._recommended_number_of_lands = (
-            self._recommended_number_of_lands
-            - (
-                (0.38 * self.non_mythic_land_spell_mdfc_count)
-                + (0.74 * self.mythic_land_spell_mdfc_count)
-            )
-        )
-
-        if self.cheap_card_scry_count >= 4:
-            self._recommended_number_of_lands = math.floor(
-                self._recommended_number_of_lands
-            )
-        else:
-            self._recommended_number_of_lands = round(
-                self._recommended_number_of_lands
-            )
-
-    def _lands_60_cards(self, companion):
-        """
-        Calculates the recommended number of lands for a 60-card deck.
-
-        Args:
-            companion (int): The number of companion cards in the deck.
-        """
-        self._recommended_number_of_lands = (
-            19.59
-            + (1.90 * self.average_cmc)
-            - (
-                0.28
-                * (self.cheap_card_draw_count + self.cheap_mana_ramp_count)
-            )
-            + (0.27 * companion)
+        ) - (
+            0.28 * (self.cheap_card_draw_count + self.cheap_mana_ramp_count)
+            - commander_free_mulligan_draw_reduction
         )
 
         self._recommended_number_of_lands = (
@@ -499,47 +453,10 @@ class Analyzer:
             )
         )
 
-        if self.cheap_card_scry_count >= 4:
+        if self.card_count <= 60 and self.cheap_card_scry_count >= 4:
             self._recommended_number_of_lands = math.floor(
                 self._recommended_number_of_lands
             )
-        else:
-            self._recommended_number_of_lands = round(
-                self._recommended_number_of_lands
-            )
-
-    def _lands_80_cards(self):
-        """
-        Calculates the recommended number of lands for an 80-card deck.
-        """
-        self._recommended_number_of_lands = (
-            80 / 60 * (19.59 + (1.90 * self.average_cmc) + 0.27)
-        ) - (0.28 * (self.cheap_card_draw_count + self.cheap_mana_ramp_count))
-
-        self._recommended_number_of_lands -= (
-            0.38 * self.non_mythic_land_spell_mdfc_count
-        ) + (0.74 * self.mythic_land_spell_mdfc_count)
-
-        self._recommended_number_of_lands = round(
-            self._recommended_number_of_lands
-        )
-
-    def _lands_99_cards(self):
-        """
-        Calculates the recommended number of lands for a 99-card deck.
-        """
-        self._recommended_number_of_lands = (
-            (99 / 60 * (19.59 + (1.90 * self.average_cmc) + 0.27))
-            - (
-                0.28
-                * (self.cheap_card_draw_count + self.cheap_mana_ramp_count)
-            )
-            - 1.35
-        )
-
-        self._recommended_number_of_lands -= (
-            0.38 * self.non_mythic_land_spell_mdfc_count
-        ) + (0.74 * self.mythic_land_spell_mdfc_count)
 
         self._recommended_number_of_lands = round(
             self._recommended_number_of_lands
