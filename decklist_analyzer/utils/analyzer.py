@@ -430,10 +430,10 @@ class Analyzer:
         """
         commander_free_mulligan_draw_reduction = 0
 
-        if self.card_count == 99:
+        if self.card_count >= 98:
             commander_free_mulligan_draw_reduction = 1.35
 
-        if self.card_count == 80 or self.card_count == 99:
+        if self.card_count >= 80:
             companion = 1
 
         self._recommended_number_of_lands = (
