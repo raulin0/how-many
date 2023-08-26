@@ -29,6 +29,8 @@ def index(request):
         form = request.POST
         decklist = form.get('decklist', '').strip()
 
+        request.session['preloaded_decklist'] = decklist
+
         try:
             parser = DecklistParser(decklist)
             parser.parse_decklist()
@@ -88,22 +90,70 @@ def index(request):
 
             return redirect('index')
     else:
+
         if 'result_data' in request.session:
+            preloaded_decklist = request.session['preloaded_decklist']
+            request.session.pop('preloaded_decklist', None)
             result_data = request.session['result_data']
             request.session.pop('result_data', None)
             return render(
                 request,
                 'decklist_analyzer/index.html',
-                {'result': result_data},
+                {'result': result_data, 'preloaded_decklist' : preloaded_decklist},
             )
 
         elif 'error_message' in request.session:
+            preloaded_decklist = request.session['preloaded_decklist']
+            request.session.pop('preloaded_decklist', None)
             error_message = request.session['error_message']
             request.session.pop('error_message', None)
             return render(
                 request,
                 'decklist_analyzer/index.html',
-                {'error_message': error_message},
+                {'error_message': error_message, 'preloaded_decklist' : preloaded_decklist},
             )
 
-        return render(request, 'decklist_analyzer/index.html')
+
+        request.session['preloaded_decklist'] = '''
+Companion
+1 Jegantha, the Wellspring
+
+Deck
+2 Sulfurous Springs
+3 Blackcleave Cliffs
+1 Mountain
+1 Swamp
+4 Blood Crypt
+4 Fatal Push
+1 Ramunap Ruins
+4 Thoughtseize
+4 Mayhem Devil
+3 Cauldron Familiar
+3 Claim the Firstborn
+4 Witch's Oven
+1 Kroxa, Titan of Death's Hunger
+4 Blightstep Pathway
+4 Deadly Dispute
+2 Den of the Bugbear
+2 Hive of the Eye Tyrant
+4 Bloodtithe Harvester
+4 Fable of the Mirror-Breaker
+1 Takenuma, Abandoned Mire
+1 Sokenzan, Crucible of Defiance
+3 Unlucky Witness
+
+Sideboard
+1 Kolaghan's Command
+2 Rending Volley
+1 Jegantha, the Wellspring
+2 Unlicensed Hearse
+2 Duress
+2 Furnace Reins
+2 Damping Sphere
+1 Abrade
+2 Ob Nixilis, the Adversary 
+        '''
+
+        preloaded_decklist = request.session['preloaded_decklist']
+        request.session.pop('preloaded_decklist', None)
+        return render(request, 'decklist_analyzer/index.html', {'preloaded_decklist' : preloaded_decklist})
