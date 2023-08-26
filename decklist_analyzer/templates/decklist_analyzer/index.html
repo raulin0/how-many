@@ -10,6 +10,7 @@
             <div class="form-container">
                 <form id="decklist-form" method="post">
                     {% csrf_token %}
+                    <label for="decklist">Enter your decklist:</label>
                     <textarea id="decklist" tabindex="0" onfocus="closeSidebar()" name="decklist">{{ preloaded_decklist }}</textarea>
                     <button id="submit-button" type="submit">How many lands do I need in my deck?</button>
                 </form>
