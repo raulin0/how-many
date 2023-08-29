@@ -201,6 +201,7 @@ class Analyzer:
         """
         type_line = card_data.get('type_line', '').lower()
         layout = card_data.get('layout', '').lower()
+        oracle_text = card_data.get('oracle_text', '').lower()
 
         # Determine if the card is a non-land card, possibly with a land/spell modal double-faced layout
         if not ('land' in type_line) or (
@@ -228,7 +229,6 @@ class Analyzer:
                     self._non_mythic_land_spell_mdfc_count += card_quantity
 
             # Check if the card provides cheap card draw
-            oracle_text = card_data.get('oracle_text', '').lower()
             if self._is_cheap_card_draw(oracle_text, cmc, type_line):
                 self._cheap_card_draw_list.append(card)
                 self._cheap_card_draw_count += card_quantity
