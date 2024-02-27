@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class DecklistAnalyzerConfig(AppConfig):
+class ApiConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'decklist_analyzer'
+    name = 'api'

@@ -1,6 +1,6 @@
 import math
 
-from decklist_analyzer.utils.card_data_fetcher import CardDataFetcher
+from api.utils.card_data_fetcher import CardDataFetcher
 
 
 class Analyzer:
