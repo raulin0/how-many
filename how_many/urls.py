@@ -16,24 +16,31 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from django.views.generic import TemplateView
+from rest_framework import routers
+
+from api.swagger import urlpatterns as swagger_urls
+from api.views import (
+    CardViewSet,
+    CommanderViewSet,
+    CompanionViewSet,
+    DecklistCardViewSet,
+    DecklistViewSet,
+    MaindeckViewSet,
+    SideboardViewSet,
+)
+
+
+router = routers.DefaultRouter()
+router.register('cards', CardViewSet)
+router.register('decklistcards', DecklistCardViewSet)
+router.register('commanders', CommanderViewSet)
+router.register('companions', CompanionViewSet)
+router.register('maindecks', MaindeckViewSet)
+router.register('sideboards', SideboardViewSet)
+router.register('decklists', DecklistViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('decklist_analyzer.urls')),
-    path(
-        'about-us/',
-        TemplateView.as_view(template_name='about_us.html'),
-        name='about_us',
-    ),
-    path(
-        'privacy-policy/',
-        TemplateView.as_view(template_name='privacy_policy.html'),
-        name='privacy_policy',
-    ),
-    path(
-        'terms-of-service/',
-        TemplateView.as_view(template_name='terms_of_service.html'),
-        name='terms_of_service',
-    ),
+    path('', include(router.urls)),
+    path('', include(swagger_urls)),
 ]
