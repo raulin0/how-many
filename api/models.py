@@ -1,54 +1,74 @@
 from django.db import models
 
 
-class Card(models.Model):
-    name = models.CharField(max_length=100)
+class CardModel(models.Model):
+    RARITY_CHOICES = [
+        ('common', 'common'),
+        ('uncommon', 'uncommon'),
+        ('rare', 'rare'),
+        ('mythic', 'mythic'),
+    ]
+
+    name = models.CharField(max_length=100, unique=True, db_index=True)
+    mana_cost = models.CharField(max_length=20, blank=True)
+    cmc = models.FloatField()
+    type_line = models.CharField(max_length=100)
+    rarity = models.CharField(max_length=20, choices=RARITY_CHOICES)
+    oracle_text = models.TextField(blank=True)
+    is_land = models.BooleanField()
+    is_cheap_card_draw_spell = models.BooleanField()
+    is_cheap_mana_ramp_spell = models.BooleanField()
+    is_land_spell_mdfc = models.BooleanField()
+
+    class Meta:
+        verbose_name = 'Card'
 
     def __str__(self):
         return self.name
 
 
-class DecklistCard(models.Model):
-    card = models.ForeignKey(Card, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+class DeckModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    is_commander_deck = models.BooleanField()
+    has_companion = models.BooleanField()
+    maindeck_card_count = models.IntegerField()
+    non_land_card_count = models.IntegerField()
+    non_land_cmcs_count = models.FloatField()
+    cheap_card_draw_spell_count = models.IntegerField()
+    cheap_mana_ramp_spell_count = models.IntegerField()
+    non_mythic_land_spell_mdfc_count = models.IntegerField()
+    mythic_land_spell_mdfc_count = models.IntegerField()
+    average_cmc = models.FloatField()
+    recommended_number_of_lands = models.IntegerField()
+
+    class Meta:
+        verbose_name = 'Deck'
 
     def __str__(self):
-        return f'{self.quantity}x {self.card}'
+        return f'Deck created at {self.created_at}'
 
 
-class Commander(models.Model):
-    commanders_cards = models.ManyToManyField(DecklistCard)
+class CardDeckModel(models.Model):
+    SECTION_CHOICES = [
+        ('commander', 'commander'),
+        ('companion', 'companion'),
+        ('deck', 'deck'),
+        ('sideboard', 'sideboard'),
+    ]
 
-    def __str__(self):
-        return ', '.join(str(card) for card in self.commanders_cards.all())
+    section = models.CharField(
+        max_length=20, choices=SECTION_CHOICES, blank=False, null=False
+    )
+    quantity = models.IntegerField(blank=False, null=False, default=1)
+    card = models.ForeignKey(
+        CardModel, on_delete=models.CASCADE, related_name='decks'
+    )
+    deck = models.ForeignKey(
+        DeckModel, on_delete=models.CASCADE, related_name='cards'
+    )
 
-
-class Companion(models.Model):
-    companion_card = models.ForeignKey(DecklistCard, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return str(self.companion_card)
-
-
-class Maindeck(models.Model):
-    maindeck_cards = models.ManyToManyField(DecklistCard)
-
-    def __str__(self):
-        return ', '.join(str(card) for card in self.maindeck_cards.all())
-
-
-class Sideboard(models.Model):
-    sideboard_cards = models.ManyToManyField(DecklistCard)
+    class Meta:
+        verbose_name = 'Card-Deck Association'
 
     def __str__(self):
-        return ', '.join(str(card) for card in self.sideboard_cards.all())
-
-
-class Decklist(models.Model):
-    commanders = models.ForeignKey(Commander, on_delete=models.CASCADE)
-    companion = models.ForeignKey(Companion, on_delete=models.CASCADE)
-    maindeck = models.ForeignKey(Maindeck, on_delete=models.CASCADE)
-    sideboard = models.ForeignKey(Sideboard, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'Commander: {self.commanders}, Companion: {self.companion}, Maindeck: {self.maindeck}, Sideboard: {self.sideboard}'
+        return f'{self.quantity}x {self.card.name} in {self.deck} ({self.section})'
