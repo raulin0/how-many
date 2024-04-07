@@ -1,53 +1,37 @@
 from rest_framework import serializers
 
-from api.models import (
-    Card,
-    Commander,
-    Companion,
-    Decklist,
-    DecklistCard,
-    Maindeck,
-    Sideboard,
-)
+from api.models import CardDeckModel, CardModel, DeckModel
 
 
-class CardSerializer(serializers.ModelSerializer):
+class CardModelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Card
+        model = CardModel
         fields = '__all__'
 
 
-class DecklistCardSerializer(serializers.ModelSerializer):
+class DeckModelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = DecklistCard
+        model = DeckModel
         fields = '__all__'
 
 
-class CommanderSerializer(serializers.ModelSerializer):
+class CardDeckModelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Commander
+        model = CardDeckModel
         fields = '__all__'
 
 
-class CompanionSerializer(serializers.ModelSerializer):
+class ListCardDecksSerializer(serializers.ModelSerializer):
+    deck = serializers.ReadOnlyField(source='deck.id')
+
     class Meta:
-        model = Companion
-        fields = '__all__'
+        model = CardDeckModel
+        fields = ['deck']
 
 
-class MaindeckSerializer(serializers.ModelSerializer):
+class ListDeckCardsSerializer(serializers.ModelSerializer):
+    card_name = serializers.ReadOnlyField(source='card.name')
+
     class Meta:
-        model = Maindeck
-        fields = '__all__'
-
-
-class SideboardSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Sideboard
-        fields = '__all__'
-
-
-class DecklistSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Decklist
-        fields = '__all__'
+        model = CardDeckModel
+        fields = ['section', 'quantity', 'card_name']
