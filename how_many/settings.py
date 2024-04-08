@@ -26,7 +26,6 @@ from utils.project_info import get_project_info
 # Extracts the information from the file pyproject.toml
 name, version, description = get_project_info()
 
-# Use the information in the settings.py file
 PROJECT_NAME = name
 PROJECT_VERSION = version
 PROJECT_DESCRIPTION = description
@@ -60,9 +59,11 @@ INSTALLED_APPS = [
     'drf_yasg',
     'api',
     'django_filters',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'django.middleware.CorsMiddleware'
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -175,3 +176,13 @@ REST_FRAMEWORK = {
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Configure the middleware’s behaviour in your Django settings. You must set at least one of three following settings:
+# A list of origins that are authorized to make cross-site HTTP requests. The origins in this setting will be allowed, and the requesting origin will be echoed back to the client in the access-control-allow-origin header. Defaults to [].
+# CORS_ALLOWED_ORIGINS = []
+
+# A list of strings representing regexes that match Origins that are authorized to make cross-site HTTP requests. Defaults to []. Useful when CORS_ALLOWED_ORIGINS is impractical, such as when you have a large number of subdomains.
+# CORS_ALLOWED_ORIGIN_REGEXES = []
+
+# If True, all origins will be allowed. Other settings restricting allowed origins will be ignored. Defaults to False.
+# CORS_ALLOW_ALL_ORIGINS = False
