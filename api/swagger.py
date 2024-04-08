@@ -3,12 +3,17 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
+from how_many.settings import (
+    PROJECT_DESCRIPTION,
+    PROJECT_NAME,
+    PROJECT_VERSION,
+)
 
 schema_view = get_schema_view(
     openapi.Info(
-        title='How Many',
-        default_version='0.1.0',
-        description='Easy-to-use tool to build decks with a more consistent mana base',
+        title=PROJECT_NAME,
+        default_version=PROJECT_VERSION,
+        description=PROJECT_DESCRIPTION,
         license=openapi.License(name='GPL-3.0-only'),
     ),
     public=True,
