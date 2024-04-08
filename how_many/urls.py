@@ -19,25 +19,12 @@ from django.urls import include, path
 from rest_framework import routers
 
 from api.swagger import urlpatterns as swagger_urls
-from api.views import (
-    CardViewSet,
-    CommanderViewSet,
-    CompanionViewSet,
-    DecklistCardViewSet,
-    DecklistViewSet,
-    MaindeckViewSet,
-    SideboardViewSet,
-)
-
+from api.views import CardDeckModelViewSet, CardModelViewSet, DeckModelViewSet
 
 router = routers.DefaultRouter()
-router.register('cards', CardViewSet)
-router.register('decklistcards', DecklistCardViewSet)
-router.register('commanders', CommanderViewSet)
-router.register('companions', CompanionViewSet)
-router.register('maindecks', MaindeckViewSet)
-router.register('sideboards', SideboardViewSet)
-router.register('decklists', DecklistViewSet)
+router.register('cards', CardModelViewSet)
+router.register('decks', DeckModelViewSet)
+router.register('card-decks', CardDeckModelViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
