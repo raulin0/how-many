@@ -6,6 +6,7 @@ charset-normalizer==3.3.2
 click==8.1.7
 colorama==0.4.6
 Django==4.2.10
+django-cors-headers==4.3.1
 django-filter==23.5
 djangorestframework==3.14.0
 drf-yasg==1.21.7
@@ -27,6 +28,7 @@ pytz==2024.1
 PyYAML==6.0.1
 requests==2.31.0
 sqlparse==0.4.4
+toml==0.10.2
 tomli==2.0.1
 tzdata==2024.1
 uritemplate==4.1.1
