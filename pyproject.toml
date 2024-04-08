@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "how-many"
+name = "How Many API"
 version = "0.1.0"
-description = "Easy-to-use tool to build decks with a more consistent mana base"
+description = "API for easy-to-use tool to build decks with a more consistent mana base"
 authors = ["Marcos Raulino <marcosfsraulino@gmail.com>"]
 readme = "README.md"
 packages = [{include = "how_many"}]
@@ -16,6 +16,7 @@ python-dotenv = "^1.0.0"
 requests = "^2.31.0"
 drf-yasg = "^1.21.7"
 psycopg2 = "^2.9.9"
+toml = "^0.10.2"
 
 [tool.poetry.group.dev.dependencies]
 blue = "^0.9.1"
