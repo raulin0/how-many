@@ -8,6 +8,7 @@ class CardModelAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'name',
+        'layout',
         'mana_cost',
         'cmc',
         'type_line',
@@ -21,6 +22,7 @@ class CardModelAdmin(admin.ModelAdmin):
     list_display_links = ('id', 'name')
     search_fields = (
         'name',
+        'layout',
         'mana_cost',
         'type_line',
         'oracle_text',
