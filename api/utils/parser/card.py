@@ -3,6 +3,7 @@ class Card:
         self,
         name: str,
         quantity: int,
+        layout: str,
         mana_cost: str,
         cmc: float,
         type_line: str,
@@ -15,6 +16,7 @@ class Card:
     ):
         self._name = name
         self._quantity = quantity
+        self._layout = layout
         self._mana_cost = mana_cost
         self._cmc = cmc
         self._type_line = type_line
@@ -32,6 +34,10 @@ class Card:
     @property
     def quantity(self):
         return self._quantity
+
+    @property
+    def layout(self):
+        return self._layout
 
     @property
     def mana_cost(self):
