@@ -22,9 +22,9 @@ from api.swagger import urlpatterns as swagger_urls
 from api.views import CardDeckModelViewSet, CardModelViewSet, DeckModelViewSet
 
 router = routers.DefaultRouter()
-router.register('cards', CardModelViewSet)
-router.register('decks', DeckModelViewSet)
-router.register('card-decks', CardDeckModelViewSet)
+router.register('cards', CardModelViewSet, basename='cards')
+router.register('decks', DeckModelViewSet, basename='decks')
+router.register('card-decks', CardDeckModelViewSet, basename='card_decks')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
