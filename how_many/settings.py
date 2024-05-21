@@ -30,6 +30,9 @@ PROJECT_NAME = name
 PROJECT_VERSION = version
 PROJECT_DESCRIPTION = description
 
+# Setting up the Scryfall API URL
+SCRYFALL_API_URL = 'https://api.scryfall.com/cards/named?exact='
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -63,7 +66,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.CorsMiddleware'
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -185,4 +188,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CORS_ALLOWED_ORIGIN_REGEXES = []
 
 # If True, all origins will be allowed. Other settings restricting allowed origins will be ignored. Defaults to False.
-# CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True
