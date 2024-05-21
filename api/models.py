@@ -3,18 +3,19 @@ from django.db import models
 
 class CardModel(models.Model):
     RARITY_CHOICES = [
-        ('common', 'common'),
-        ('uncommon', 'uncommon'),
-        ('rare', 'rare'),
-        ('mythic', 'mythic'),
+        ('common', 'Common'),
+        ('uncommon', 'Uncommon'),
+        ('rare', 'Rare'),
+        ('mythic', 'Mythic'),
     ]
 
     name = models.CharField(max_length=100, unique=True, db_index=True)
-    mana_cost = models.CharField(max_length=20, blank=True)
+    layout = models.CharField(max_length=20)
+    mana_cost = models.CharField(max_length=20, blank=True, null=True)
     cmc = models.FloatField()
     type_line = models.CharField(max_length=100)
     rarity = models.CharField(max_length=20, choices=RARITY_CHOICES)
-    oracle_text = models.TextField(blank=True)
+    oracle_text = models.TextField(blank=True, null=True)
     is_land = models.BooleanField()
     is_cheap_card_draw_spell = models.BooleanField()
     is_cheap_mana_ramp_spell = models.BooleanField()
@@ -50,22 +51,18 @@ class DeckModel(models.Model):
 
 class CardDeckModel(models.Model):
     SECTION_CHOICES = [
-        ('commander', 'commander'),
-        ('companion', 'companion'),
-        ('deck', 'deck'),
-        ('sideboard', 'sideboard'),
+        ('commander', 'Commander'),
+        ('companion', 'Companion'),
+        ('deck', 'Deck'),
+        ('sideboard', 'Sideboard'),
     ]
 
     section = models.CharField(
         max_length=20, choices=SECTION_CHOICES, blank=False, null=False
     )
-    quantity = models.IntegerField(blank=False, null=False, default=1)
-    card = models.ForeignKey(
-        CardModel, on_delete=models.CASCADE, related_name='decks'
-    )
-    deck = models.ForeignKey(
-        DeckModel, on_delete=models.CASCADE, related_name='cards'
-    )
+    quantity = models.IntegerField(blank=False, null=False)
+    card = models.ForeignKey(CardModel, on_delete=models.CASCADE)
+    deck = models.ForeignKey(DeckModel, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Card-Deck Association'
