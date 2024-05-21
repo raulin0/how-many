@@ -7,6 +7,9 @@ class CardModelFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(
         field_name='name', lookup_expr='icontains', label='Name'
     )
+    layout = django_filters.CharFilter(
+        field_name='layout', lookup_expr='iexact', label='Layout'
+    )
     mana_cost = django_filters.CharFilter(
         field_name='mana_cost', lookup_expr='iexact', label='Mana Cost'
     )
@@ -55,6 +58,7 @@ class CardModelFilter(django_filters.FilterSet):
         model = CardModel
         fields = [
             'name',
+            'layout',
             'mana_cost',
             'mana_cost_icontains',
             'cmc',
@@ -246,6 +250,9 @@ class DeckCardsFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(
         field_name='card__name', lookup_expr='icontains', label='Name'
     )
+    layout = django_filters.CharFilter(
+        field_name='card__layout', lookup_expr='iexact', label='Layout'
+    )
     mana_cost = django_filters.CharFilter(
         field_name='card__mana_cost', lookup_expr='iexact', label='Mana Cost'
     )
@@ -311,6 +318,7 @@ class DeckCardsFilter(django_filters.FilterSet):
         model = CardDeckModel
         fields = [
             'name',
+            'layout',
             'mana_cost',
             'mana_cost_icontains',
             'cmc',
@@ -328,7 +336,7 @@ class DeckCardsFilter(django_filters.FilterSet):
         ]
 
 
-class DeckCardModelFilter(django_filters.FilterSet):
+class CardDeckModelFilter(django_filters.FilterSet):
     card_name = django_filters.CharFilter(
         field_name='card__name', lookup_expr='icontains', label='Card name'
     )
