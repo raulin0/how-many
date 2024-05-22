@@ -9,14 +9,33 @@ from how_many.settings import SCRYFALL_API_URL
 
 
 class DecklistDataManager:
+    """
+    Class for managing decklist data.
+
+    Attributes:
+        _decklist (Decklist): The decklist object.
+    """
+
     def __init__(self, decklist: Decklist):
+        """
+        Initializes a new instance of the DecklistDataManager class.
+
+        Parameters:
+            decklist (Decklist): The decklist object.
+        """
         self._decklist = decklist
 
     @property
     def decklist(self):
+        """
+        Decklist: Returns the decklist object.
+        """
         return self._decklist
 
     def process_decklist(self):
+        """
+        Processes the decklist.
+        """
         for decklist_section in self.decklist.sections:
             for section_card in decklist_section.cards:
                 self._get_or_fetch_card_data(section_card)
@@ -39,14 +58,26 @@ class DecklistDataManager:
         self._get_recommended_number_of_lands()
 
     def _get_or_fetch_card_data(self, section_card: Card):
+        """
+        Gets or fetches data for a card.
+
+        Parameters:
+            section_card (Card): The card object.
+        """
         card = CardModel.objects.filter(name=section_card.name).first()
         if card:
             self._get_database_card_data(section_card, card)
-
         else:
             self._get_scryfall_card_data(section_card)
 
     def _get_database_card_data(self, section_card: Card, card: CardModel):
+        """
+        Gets card data from the database.
+
+        Parameters:
+            section_card (Card): The card object.
+            card (CardModel): The card model object.
+        """
         section_card._name = card.name
         section_card._layout = card.layout
         section_card._mana_cost = card.mana_cost
@@ -60,6 +91,12 @@ class DecklistDataManager:
         section_card._is_land_spell_mdfc = card.is_land_spell_mdfc
 
     def _get_scryfall_card_data(self, section_card: Card):
+        """
+        Fetches card data from Scryfall.
+
+        Parameters:
+            section_card (Card): The card object.
+        """
         fetched_card_data = self._fetch_card_data(section_card.name)
         if fetched_card_data:
             section_card._name = self._get_name(fetched_card_data)
@@ -105,25 +142,61 @@ class DecklistDataManager:
             )
 
     def _fetch_card_data(self, section_card_name: str):
+        """
+        Fetches card data from the Scryfall API.
+
+        Parameters:
+            section_card_name (str): The name of the card.
+
+        Returns:
+            dict: The fetched card data.
+        """
         scryfall_api_request_url = f'{SCRYFALL_API_URL}{section_card_name}'
-        
         try:
             response = requests.get(scryfall_api_request_url)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
-            print(f"An error occurred: {e}")
+            print(f'An error occurred: {e}')
             return None
 
     def _get_name(self, fetched_card_data: dict):
+        """
+        Gets the name of the card from fetched card data.
+
+        Parameters:
+            fetched_card_data (dict): The fetched card data.
+
+        Returns:
+            str: The name of the card.
+        """
         return fetched_card_data.get('name', '')
 
     def _get_layout(self, fetched_card_data: dict):
+        """
+        Gets the layout of the card from fetched card data.
+
+        Parameters:
+            fetched_card_data (dict): The fetched card data.
+
+        Returns:
+            str: The layout of the card.
+        """
         return fetched_card_data.get('layout', '')
 
     def _get_mana_cost(
         self, section_card_layout: str, fetched_card_data: dict
     ):
+        """
+        Gets the mana cost of the card from fetched card data.
+
+        Parameters:
+            section_card_layout (str): The layout of the card.
+            fetched_card_data (dict): The fetched card data.
+
+        Returns:
+            str: The mana cost of the card.
+        """
         if 'normal' not in section_card_layout:
             front_mana_cost = fetched_card_data.get('card_faces', [{}])[0].get(
                 'mana_cost', ''
@@ -131,28 +204,63 @@ class DecklistDataManager:
             back_mana_cost = fetched_card_data.get('card_faces', [{}])[1].get(
                 'mana_cost', ''
             )
-            card_mana_Cost = f'{front_mana_cost} // {back_mana_cost}'
-
-            return (
-                card_mana_Cost
+            card_mana_cost = (
+                f'{front_mana_cost} // {back_mana_cost}'
                 if front_mana_cost and back_mana_cost
                 else front_mana_cost or back_mana_cost
             )
-
+            return card_mana_cost
         return fetched_card_data.get('mana_cost', '')
 
     def _get_cmc(self, fetched_card_data: dict):
+        """
+        Gets the converted mana cost (CMC) of the card from fetched card data.
+
+        Parameters:
+            fetched_card_data (dict): The fetched card data.
+
+        Returns:
+            float: The converted mana cost (CMC) of the card.
+        """
         return fetched_card_data.get('cmc', 0.0)
 
     def _get_type_line(self, fetched_card_data: dict):
+        """
+        Gets the type line of the card from fetched card data.
+
+        Parameters:
+            fetched_card_data (dict): The fetched card data.
+
+        Returns:
+            str: The type line of the card.
+        """
         return fetched_card_data.get('type_line', '')
 
     def _get_rarity(self, fetched_card_data: dict):
+        """
+        Gets the rarity of the card from fetched card data.
+
+        Parameters:
+            fetched_card_data (dict): The fetched card data.
+
+        Returns:
+            str: The rarity of the card.
+        """
         return fetched_card_data.get('rarity', '')
 
     def _get_oracle_text(
         self, section_card_layout: str, fetched_card_data: dict
     ):
+        """
+        Gets the oracle text of the card from fetched card data.
+
+        Parameters:
+            section_card_layout (str): The layout of the card.
+            fetched_card_data (dict): The fetched card data.
+
+        Returns:
+            str: The oracle text of the card.
+        """
         if 'normal' not in section_card_layout:
             front_oracle_text = fetched_card_data.get('card_faces', [{}])[
                 0
@@ -160,14 +268,12 @@ class DecklistDataManager:
             back_oracle_text = fetched_card_data.get('card_faces', [{}])[
                 1
             ].get('oracle_text', '')
-            card_oracle_text = f'{front_oracle_text} // {back_oracle_text}'
-
-            return (
-                card_oracle_text
+            card_oracle_text = (
+                f'{front_oracle_text} // {back_oracle_text}'
                 if front_oracle_text and back_oracle_text
                 else front_oracle_text or back_oracle_text
             )
-
+            return card_oracle_text
         return fetched_card_data.get('oracle_text', '')
 
     def _is_land(
@@ -176,22 +282,28 @@ class DecklistDataManager:
         section_card_layout_lower: str,
         fetched_card_data: dict,
     ):
+        """
+        Checks if the card is a land based on its type line and layout.
+
+        Parameters:
+            section_card_type_line_lower (str): The lowercased type line of the card.
+            section_card_layout_lower (str): The lowercased layout of the card.
+            fetched_card_data (dict): The fetched card data.
+
+        Returns:
+            bool: True if the card is a land, False otherwise.
+        """
         if 'modal_dfc' in section_card_layout_lower:
             section_card_front_type_line = fetched_card_data.get(
                 'card_faces', [{}]
             )[0].get('type_line', '')
-
             section_card_front_type_line_lower = (
                 section_card_front_type_line.lower()
             )
             if 'land' in section_card_front_type_line_lower:
-
                 return True
-
         elif 'land' in section_card_type_line_lower:
-
             return True
-
         return False
 
     def _is_cheap_card_draw_spell(
@@ -201,49 +313,48 @@ class DecklistDataManager:
         section_card_type_line_lower: str,
         section_card_is_land: bool,
     ):
+        """
+        Checks if the card is a cheap card draw spell based on its CMC, oracle text, type line, and whether it's a land.
+
+        Parameters:
+            section_card_cmc (float): The converted mana cost (CMC) of the card.
+            section_card_oracle_text_lower (str): The lowercased oracle text of the card.
+            section_card_type_line_lower (str): The lowercased type line of the card.
+            section_card_is_land (bool): True if the card is a land, False otherwise.
+
+        Returns:
+            bool: True if the card is a cheap card draw spell, False otherwise.
+        """
         if section_card_is_land:
-
             return False
-
         if not section_card_oracle_text_lower:
-
             return False
-
         cycling_cost_match = re.search(
             r'cycling \{[1wburg]\}', section_card_oracle_text_lower
         )
         if cycling_cost_match:
-
             return True
-
         if section_card_cmc <= 2.0:
             if 'draw' in section_card_oracle_text_lower:
                 draw_cost_match = re.search(
                     r'\{\d+\}', section_card_oracle_text_lower
                 )
                 if draw_cost_match:
-
                     return False
-
                 attack_block_draw_condition_match = re.search(
                     r'\battack|attacks|block|blocks\b',
                     section_card_oracle_text_lower,
                 )
                 if attack_block_draw_condition_match:
-
                     return False
-
                 if 'creature' in section_card_type_line_lower:
                     etb_draw_condition_match = re.search(
                         r'\bwhen.*enter|enters\b',
                         section_card_oracle_text_lower,
                     )
                     if etb_draw_condition_match:
-
                         return True
-
                 return True
-
             draw_equivalent_terms_match = re.search(
                 r'\blook.*library.*put.*your hand\b',
                 section_card_oracle_text_lower,
@@ -253,11 +364,8 @@ class DecklistDataManager:
                     r'\{\d+\}', section_card_oracle_text_lower
                 )
                 if draw_equivalent_cost_match:
-
                     return False
-
                 return True
-
         return False
 
     def _is_cheap_mana_ramp_spell(
@@ -268,18 +376,25 @@ class DecklistDataManager:
         section_card_is_land: bool,
         section_card_is_cheap_card_draw_spell: bool,
     ):
+        """
+        Checks if the card is a cheap mana ramp spell based on its CMC, type line, oracle        text, and whether it's a land or a cheap card draw spell.
+
+        Parameters:
+            section_card_cmc (float): The converted mana cost (CMC) of the card.
+            section_card_type_line_lower (str): The lowercased type line of the card.
+            section_card_oracle_text_lower (str): The lowercased oracle text of the card.
+            section_card_is_land (bool): True if the card is a land, False otherwise.
+            section_card_is_cheap_card_draw_spell (bool): True if the card is a cheap card draw spell, False otherwise.
+
+        Returns:
+            bool: True if the card is a cheap mana ramp spell, False otherwise.
+        """
         if section_card_is_land:
-
             return False
-
         if not section_card_oracle_text_lower:
-
             return False
-
         if section_card_is_cheap_card_draw_spell:
-
             return False
-
         if section_card_cmc <= 2.0:
             if 'add ' in section_card_oracle_text_lower:
                 not_add_mana_term_match = re.search(
@@ -287,54 +402,39 @@ class DecklistDataManager:
                     section_card_oracle_text_lower,
                 )
                 if not_add_mana_term_match:
-
                     return False
-
                 if 'creature' in section_card_type_line_lower:
                     if 'die' in section_card_oracle_text_lower:
-
                         return False
-
                     return True
-
                 return True
-
             untap_land_term_match = re.search(
                 r'\buntap target.*land|snow land|forest|swamp|mountain|island|plains\b',
                 section_card_oracle_text_lower,
             )
             if untap_land_term_match:
-
                 return True
-
             mana_ramp_equivalent_terms_match = re.search(
                 r'\bsearch.*your library.*land\b',
                 section_card_oracle_text_lower,
             )
             if mana_ramp_equivalent_terms_match:
                 if 'sacrifice' in section_card_oracle_text_lower:
-
                     return False
-
                 return True
-
             enchanted_land_ramp_term_match = re.search(
                 r'\benchanted.*land|snow land|forest|swamp|mountain|island|plains\b',
                 section_card_oracle_text_lower,
             )
             if enchanted_land_ramp_term_match:
                 if 'adds an additional' in section_card_oracle_text_lower:
-
                     return True
-
             put_onto_battlefield_terms_match = re.search(
                 r'\bput.*creature card with.*from your hand onto the battlefield\b',
                 section_card_oracle_text_lower,
             )
             if put_onto_battlefield_terms_match:
-
                 return True
-
         return False
 
     def _is_land_spell_mdfc(
@@ -343,10 +443,19 @@ class DecklistDataManager:
         section_card_layout_lower: str,
         fetched_card_data: dict,
     ):
+        """
+        Checks if the card is a land spell modal double-faced card (MDFC).
+
+        Parameters:
+            section_card_is_land (bool): True if the card is a land, False otherwise.
+            section_card_layout_lower (str): The lowercased layout of the card.
+            fetched_card_data (dict): The fetched card data.
+
+        Returns:
+            bool: True if the card is a land spell MDFC, False otherwise.
+        """
         if section_card_is_land:
-
             return False
-
         if 'modal_dfc' in section_card_layout_lower:
             section_card_back_type_line = fetched_card_data.get(
                 'card_faces', [{}]
@@ -355,16 +464,26 @@ class DecklistDataManager:
                 section_card_back_type_line.lower()
             )
             if 'land' in section_card_back_type_line_lower:
-
                 return True
-
         return False
 
     def _get_maindeck_cards_count(self, section_card: Card):
+        """
+        Gets the count of maindeck cards.
+
+        Parameters:
+            section_card (Card): The card object.
+        """
         section_card_quantity = section_card.quantity
         self._decklist._maindeck_card_count += section_card_quantity
 
     def _get_non_land_card_and_non_land_cmcs_count(self, section_card: Card):
+        """
+        Gets the count of non-land cards and the sum of their converted mana costs (CMCs).
+
+        Parameters:
+            section_card (Card): The card object.
+        """
         section_card_is_land = section_card.is_land
         section_card_quantity = section_card.quantity
         section_card_cmc = section_card.cmc
@@ -375,6 +494,12 @@ class DecklistDataManager:
             )
 
     def _get_cheap_card_draw_spell_count(self, section_card: Card):
+        """
+        Gets the count of cheap card draw spells.
+
+        Parameters:
+            section_card (Card): The card object.
+        """
         section_card_is_cheap_card_draw_spell = (
             section_card.is_cheap_card_draw_spell
         )
@@ -385,6 +510,12 @@ class DecklistDataManager:
             )
 
     def _get_cheap_mana_ramp_spell_count(self, section_card: Card):
+        """
+        Gets the count of cheap mana ramp spells.
+
+        Parameters:
+            section_card (Card): The card object.
+        """
         section_card_is_cheap_mana_ramp_spell = (
             section_card.is_cheap_mana_ramp_spell
         )
@@ -397,6 +528,12 @@ class DecklistDataManager:
     def _get_non_mythic_and_mythic_land_spell_mdfc_count(
         self, section_card: Card
     ):
+        """
+        Gets the count of non-mythic and mythic land spell modal double-faced card (MDFC).
+
+        Parameters:
+            section_card (Card): The card object.
+        """
         section_card_is_land_spell_mdfc = section_card.is_land_spell_mdfc
         section_card_rarity_lower = section_card.rarity.lower()
         section_card_quantity = section_card.quantity
@@ -411,14 +548,29 @@ class DecklistDataManager:
                 )
 
     def _get_is_commander_deck(self, decklist_section_name_lower: str):
+        """
+        Checks if the deck is a commander deck.
+
+        Parameters:
+            decklist_section_name_lower (str): The lowercased name of the decklist section.
+        """
         if decklist_section_name_lower == 'commander':
             self._decklist._is_commander_deck = True
 
     def _get_has_companion(self, decklist_section_name_lower: str):
+        """
+        Checks if the deck has a companion.
+
+        Parameters:
+            decklist_section_name_lower (str): The lowercased name of the decklist section.
+        """
         if decklist_section_name_lower == 'companion':
             self._decklist._has_companion = True
 
     def _get_average_cmc(self):
+        """
+        Calculates the average converted mana cost (CMC) of the deck.
+        """
         if self.decklist.non_land_card_count != 0:
             self._decklist._average_cmc = (
                 self.decklist.non_land_cmcs_count
@@ -426,6 +578,9 @@ class DecklistDataManager:
             )
 
     def _get_recommended_number_of_lands(self):
+        """
+        Calculates the recommended number of lands for the deck.
+        """
         commander_free_mulligan_draw_reduction = 0.0
         if self.decklist.is_commander_deck:
             commander_free_mulligan_draw_reduction = 1.35
