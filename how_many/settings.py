@@ -46,7 +46,7 @@ DEBUG = str(os.getenv('ENV')) == 'development'
 if DEBUG:
     ALLOWED_HOSTS = []
 else:
-    ALLOWED_HOSTS = ['127.0.0.1']
+    ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
