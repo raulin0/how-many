@@ -6,7 +6,6 @@ Magic: The Gathering Decklist Analyzer is a tool designed to analyze and process
 
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-  - [Practical Example School Manager API](#practical-example-school-manager-api)
   - [Running the Container](#running-the-container)
 - [Authentication](#authentication)
 - [Usage](#usage)
